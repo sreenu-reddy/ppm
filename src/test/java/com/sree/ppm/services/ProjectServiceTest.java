@@ -2,6 +2,7 @@ package com.sree.ppm.services;
 
 
 import com.sree.ppm.Exceptions.ProjectIdException;
+import com.sree.ppm.api.v1.models.ProjectDTO;
 import com.sree.ppm.domains.Project;
 import com.sree.ppm.repositories.ProjectRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,14 +41,20 @@ class ProjectServiceTest {
         project.setProjectIdentifier("Identifier");
         project.setDescription("Description");
 
+        ProjectDTO projectDTO = new ProjectDTO();
+        projectDTO.setId(project.getId());
+        projectDTO.setProjectName(project.getProjectName());
+        projectDTO.setProjectIdentifier(project.getProjectIdentifier());
+        projectDTO.setDescription(project.getDescription());
+
         given(projectRepository.save(any(Project.class))).willReturn(project);
 //        When
-        Project project1 = projectService.createNewProject(project);
+        ProjectDTO projectDTO1 = projectService.createNewProject(projectDTO);
 
 //        then
-        assertNotNull(project1);
-        assertEquals(1L,project1.getId());
-        assertNull(project1.getStart_date());
+        assertNotNull(projectDTO1);
+        assertEquals(1L,projectDTO1.getId());
+        assertNull(projectDTO1.getStart_date());
     }
 
     @Test
@@ -58,9 +65,14 @@ class ProjectServiceTest {
         project.setProjectName("ProjectName");
         project.setProjectIdentifier("Identifier");
         project.setDescription("Description");
+        ProjectDTO projectDTO = new ProjectDTO();
+        projectDTO.setId(project.getId());
+        projectDTO.setProjectName(project.getProjectName());
+        projectDTO.setProjectIdentifier(project.getProjectIdentifier());
+        projectDTO.setDescription(project.getDescription());
         given(projectRepository.save(any(Project.class))).willThrow(ProjectIdException.class);
 //     When
-        assertThrows(ProjectIdException.class,()->projectService.createNewProject(project));
+        assertThrows(ProjectIdException.class,()->projectService.createNewProject(projectDTO));
 
     }
 

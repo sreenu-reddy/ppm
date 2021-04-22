@@ -1,8 +1,9 @@
 package com.sree.ppm.services;
 
 
-import com.sree.ppm.domains.Project;
+import com.sree.ppm.api.v1.models.ProjectDTO;
+
 
 public interface ProjectService {
-   Project createNewProject(Project project);
+   ProjectDTO createNewProject(ProjectDTO project);
 }

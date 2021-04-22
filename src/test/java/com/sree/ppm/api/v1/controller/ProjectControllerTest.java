@@ -1,6 +1,7 @@
 package com.sree.ppm.api.v1.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sree.ppm.api.v1.models.ProjectDTO;
 import com.sree.ppm.domains.Project;
 import com.sree.ppm.services.ProjectService;
 import org.hamcrest.core.Is;
@@ -48,12 +49,12 @@ class ProjectControllerTest {
     @Test
     void createNewProject() {
 //        given
-        Project project = new Project();
+        ProjectDTO project = new ProjectDTO();
         project.setId(1L);
         project.setProjectName("ProjectName");
         project.setProjectIdentifier("Identifier");
         project.setDescription("Description");
-        given(projectService.createNewProject(any(Project.class))).willReturn(project);
+        given(projectService.createNewProject(any(ProjectDTO.class))).willReturn(project);
 
 //        When
 
@@ -61,19 +62,19 @@ class ProjectControllerTest {
 
 //        then
         assertNotNull(project1);
-        then(projectService).should().createNewProject(any(project.getClass()));
+        then(projectService).should().createNewProject(any(ProjectDTO.class));
         then(projectService).shouldHaveNoMoreInteractions();
     }
 
     @Test
     void createNewProjectStatusIsOK() throws Exception {
         //        given
-        Project project = new Project();
+        ProjectDTO project = new ProjectDTO();
         project.setId(1L);
         project.setProjectName("ProjectName");
         project.setProjectIdentifier("Iden");
         project.setDescription("Description");
-        given(projectService.createNewProject(any(Project.class))).willReturn(project);
+        given(projectService.createNewProject(any(ProjectDTO.class))).willReturn(project);
 
 //        When
         mockMvc.perform(post("/api/v1/projects/new")
