@@ -88,7 +88,7 @@ class ProjectControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.projectName",equalTo("ProjectName")))
                 .andExpect(jsonPath("$.projectIdentifier",equalTo("Iden")))
-                .andExpect(jsonPath("$.start_date",equalTo(null)));
+                .andExpect(jsonPath("$.startDate",equalTo(null)));
     }
 
     @Test
