@@ -1,4 +1,4 @@
-package com.sree.ppm.Exceptions;
+package com.sree.ppm.exceptions;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;

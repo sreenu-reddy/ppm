@@ -16,6 +16,6 @@ public class ProjectDTO {
     private String projectIdentifier;
     @NotBlank(message = "Please provide a description to the project")
     private String description;
-    private Date start_date;
-    private Date end_date;
+    private Date startDate;
+    private Date endDate;
 }

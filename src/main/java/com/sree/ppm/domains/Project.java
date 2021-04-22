@@ -25,8 +25,8 @@ public class Project {
     @Lob
     private String description;
     @JsonFormat(pattern = "yyyy-mm-dd")
-    private Date start_date;
+    private Date startDate;
     @JsonFormat(pattern = "yyyy-mm-dd")
-    private Date end_date;
+    private Date endDate;
 
 }

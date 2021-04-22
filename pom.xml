@@ -29,7 +29,9 @@
 
         <sonar.coverage.exclusions>
             **/domains/*.*,
-            **/PpmApplication.*
+            **/PpmApplication.*,
+            **/models/*.*,
+            **/exceptions/*.*
         </sonar.coverage.exclusions>
         <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
     </properties>

@@ -1,7 +1,7 @@
 package com.sree.ppm.services;
 
 
-import com.sree.ppm.Exceptions.ProjectIdException;
+import com.sree.ppm.exceptions.ProjectIdException;
 import com.sree.ppm.api.v1.models.ProjectDTO;
 import com.sree.ppm.domains.Project;
 import com.sree.ppm.repositories.ProjectRepository;
@@ -52,8 +52,8 @@ class ProjectServiceTest {
         assertEquals("ProjectName",projectDTO1.getProjectName());
         assertEquals("Identifier",projectDTO1.getProjectIdentifier());
         assertEquals("Description",projectDTO1.getDescription());
-        assertNull(projectDTO1.getStart_date());
-        assertNull(projectDTO1.getEnd_date());
+        assertNull(projectDTO1.getStartDate());
+        assertNull(projectDTO1.getEndDate());
     }
 
     @Test
