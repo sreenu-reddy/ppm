@@ -5,12 +5,12 @@ import com.sree.ppm.services.ProjectService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +25,7 @@ public class ProjectController {
     }
 
     @PostMapping(value = "/new",consumes = "application/json",produces = "application/json")
-    public ResponseEntity<Object> createNewProject(@Validated @RequestBody ProjectDTO project,BindingResult bindingResult){
+    public ResponseEntity<Object> createNewProject(@Valid @RequestBody ProjectDTO project, BindingResult bindingResult){
         if (bindingResult.hasErrors()){
              Map<String, String> errorsMap = new HashMap<>();
             bindingResult.getFieldErrors().forEach(fieldError -> errorsMap.put(fieldError.getField(), fieldError.getDefaultMessage()));

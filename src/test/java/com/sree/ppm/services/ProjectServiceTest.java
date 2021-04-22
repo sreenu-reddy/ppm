@@ -54,7 +54,11 @@ class ProjectServiceTest {
 //        then
         assertNotNull(projectDTO1);
         assertEquals(1L,projectDTO1.getId());
+        assertEquals("ProjectName",projectDTO1.getProjectName());
+        assertEquals("Identifier",projectDTO1.getProjectIdentifier());
+        assertEquals("Description",projectDTO1.getDescription());
         assertNull(projectDTO1.getStart_date());
+        assertNull(projectDTO1.getEnd_date());
     }
 
     @Test

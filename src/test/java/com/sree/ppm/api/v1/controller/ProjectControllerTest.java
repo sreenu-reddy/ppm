@@ -62,6 +62,7 @@ class ProjectControllerTest {
 
 //        then
         assertNotNull(project1);
+
         then(projectService).should().createNewProject(any(ProjectDTO.class));
         then(projectService).shouldHaveNoMoreInteractions();
     }

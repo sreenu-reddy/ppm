@@ -216,11 +216,13 @@
                 </dependencies>
                 <configuration>
                     <targetClasses>
-                        <param>com.sree.ppm.api.v1.*</param>
+                        <param>com.sree.ppm.api.v1.controller.*</param>
+                        <param>com.sree.ppm.api.v1.mapper.*</param>
                         <param>com.sree.ppm.services.*</param>
                     </targetClasses>
                     <targetTests>
                         <param>com.sree.ppm.api.v1.*</param>
+                        <param>com.sree.ppm.api.v1.mapper.*</param>
                         <param>com.sree.ppm.services.*</param>
                     </targetTests>
                     <mutators>
