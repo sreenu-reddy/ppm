@@ -26,11 +26,6 @@ class ProjectServiceTest {
         projectService = new ProjectServiceImpl(projectRepository);
     }
 
-    @Test
-    void createNewProjectThrowsNullExp(){
-        assertThrows(NullPointerException.class,()->projectService.createNewProject(null));
-    }
-
 
     @Test
     void createNewProject() {

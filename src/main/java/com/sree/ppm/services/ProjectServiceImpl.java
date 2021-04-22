@@ -19,7 +19,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectDTO createNewProject(ProjectDTO projectDTO) {
-        if (projectDTO!=null){
             try{
                 Project detachedProject = projectMapper.projectDTOToProject(projectDTO);
                 detachedProject.setProjectIdentifier(detachedProject.getProjectIdentifier().toUpperCase());
@@ -29,10 +28,6 @@ public class ProjectServiceImpl implements ProjectService {
                 throw new ProjectIdException("Project ID :"+projectDTO.getProjectIdentifier().toUpperCase()+" Already Exists");
             }
 
-
-        }else{
-            throw new NullPointerException("project is a Null object");
-        }
 
     }
 }

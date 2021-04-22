@@ -10,11 +10,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.BindingResult;
+
+import java.util.Objects;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.*;
@@ -47,7 +50,7 @@ class ProjectControllerTest {
     }
 
     @Test
-    void createNewProject() {
+    void createNewProject() throws NoSuchMethodException {
 //        given
         ProjectDTO project = new ProjectDTO();
         project.setId(1L);
@@ -62,7 +65,8 @@ class ProjectControllerTest {
 
 //        then
         assertNotNull(project1);
-
+        assertEquals(HttpStatus.CREATED,project1.getStatusCode());
+        assertEquals(project.getClass().getDeclaredMethod("getProjectIdentifier"), Objects.requireNonNull(project1.getBody()).getClass().getDeclaredMethod("getProjectIdentifier"));
         then(projectService).should().createNewProject(any(ProjectDTO.class));
         then(projectService).shouldHaveNoMoreInteractions();
     }
@@ -82,7 +86,9 @@ class ProjectControllerTest {
         .contentType(MediaType.APPLICATION_JSON)
         .content(mapper.writeValueAsString(project)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.projectName",equalTo("ProjectName")));
+                .andExpect(jsonPath("$.projectName",equalTo("ProjectName")))
+                .andExpect(jsonPath("$.projectIdentifier",equalTo("Iden")))
+                .andExpect(jsonPath("$.start_date",equalTo(null)));
     }
 
     @Test
@@ -109,8 +115,6 @@ class ProjectControllerTest {
 //        given
         Project project = new Project();
         project.setId(1L);
-        project.setProjectName("");
-        project.setDescription("");
 
 
 //        When
