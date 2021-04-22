@@ -36,8 +36,8 @@ class ProjectMapperTest {
         assertNotNull(projectDTO);
         assertEquals(ID,projectDTO.getId());
         assertEquals(PROJECT_NAME,projectDTO.getProjectName());
-        assertNull(projectDTO.getEnd_date());
-        assertNull(projectDTO.getStart_date());
+        assertNull(projectDTO.getEndDate());
+        assertNull(projectDTO.getStartDate());
         assertNull(projectDTO.getProjectIdentifier());
         assertNull(projectDTO.getDescription());
     }
@@ -68,7 +68,7 @@ class ProjectMapperTest {
         assertEquals(PROJECT_NAME,project.getProjectName());
         assertNull(project.getProjectIdentifier());
         assertNull(project.getDescription());
-        assertNull(project.getStart_date());
-        assertNull(project.getEnd_date());
+        assertNull(project.getStartDate());
+        assertNull(project.getEndDate());
     }
 }
