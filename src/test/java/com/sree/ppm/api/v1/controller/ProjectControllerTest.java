@@ -2,6 +2,7 @@ package com.sree.ppm.api.v1.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sree.ppm.api.v1.models.ProjectDTO;
+import com.sree.ppm.api.v1.models.ProjectListDTO;
 import com.sree.ppm.domains.Project;
 import com.sree.ppm.exceptions.ProjectIdException;
 import com.sree.ppm.services.ProjectService;
@@ -18,6 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.BindingResult;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -181,7 +184,27 @@ class ProjectControllerTest {
         mockMvc.perform(get("/api/v1/projects/Idenuuuu")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
+    }
 
+    @Test
+    void getAllProjects(){
 
+//        Given
+        List<ProjectDTO> projectDTOS = new ArrayList<>();
+        ProjectDTO projectDTO = new ProjectDTO();
+        projectDTO.setId(1L);
+        projectDTOS.add(projectDTO);
+        ProjectListDTO projectListDTO = new ProjectListDTO(projectDTOS);
+        given(projectService.getAllProjects()).willReturn((projectListDTO));
+
+//        When
+        var result = controller.getAllProject();
+
+//        Then
+        assertNotNull(result);
+        assertEquals(HttpStatus.OK,result.getStatusCode());
+        assertEquals(1, Objects.requireNonNull(result.getBody()).getProjects().size());
+        then(projectService).should().getAllProjects();
+        then(projectService).shouldHaveNoMoreInteractions();
     }
 }

@@ -1,6 +1,7 @@
 package com.sree.ppm.api.v1.controller;
 
 import com.sree.ppm.api.v1.models.ProjectDTO;
+import com.sree.ppm.api.v1.models.ProjectListDTO;
 import com.sree.ppm.services.ProjectService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,5 +41,10 @@ public class ProjectController {
         }catch (Exception exception){
             return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping
+    public ResponseEntity<ProjectListDTO> getAllProject(){
+        return new ResponseEntity<>(projectService.getAllProjects(),HttpStatus.OK);
     }
 }

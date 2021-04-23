@@ -1,12 +1,14 @@
 package com.sree.ppm.services;
 
-
-import com.sree.ppm.domains.Project;
+import com.sree.ppm.api.v1.models.ProjectListDTO;
 import com.sree.ppm.exceptions.ProjectIdException;
 import com.sree.ppm.api.v1.mapper.ProjectMapper;
 import com.sree.ppm.api.v1.models.ProjectDTO;
 import com.sree.ppm.repositories.ProjectRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 
 @Service
@@ -39,4 +41,12 @@ public class ProjectServiceImpl implements ProjectService {
             }
             return projectMapper.projectToProjectDTO(project);
     }
+
+    @Override
+    public ProjectListDTO getAllProjects() {
+
+        return new ProjectListDTO(StreamSupport.stream(projectRepository.findAll().spliterator(),false).map(projectMapper::projectToProjectDTO).collect(Collectors.toList()));
+    }
+
+
 }

@@ -1,6 +1,7 @@
 package com.sree.ppm.services;
 
 
+import com.sree.ppm.api.v1.models.ProjectListDTO;
 import com.sree.ppm.exceptions.ProjectIdException;
 import com.sree.ppm.api.v1.models.ProjectDTO;
 import com.sree.ppm.domains.Project;
@@ -12,6 +13,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -118,6 +122,25 @@ class ProjectServiceTest {
         assertThrows(ProjectIdException.class,()->projectService.getProjectByIdentifier(""));
 
     }
+
+    @Test
+    void getAllProjects(){
+//        Given
+        List<Project> projectList = new ArrayList<>();
+        Project project = new Project();
+        project.setId(1L);
+        project.setProjectName("Name");
+        project.setProjectIdentifier("Iden");
+        projectList.add(project);
+        given(projectRepository.findAll()).willReturn(projectList);
+//        When
+        ProjectListDTO projects = projectService.getAllProjects();
+
+//        Then
+        assertNotNull(projects);
+        assertEquals(1,projects.getProjects().size());
+    }
+
 
 
 }
