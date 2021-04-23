@@ -33,9 +33,9 @@ public class ProjectController {
 
 
     @GetMapping("/{identifier}")
-    public ResponseEntity<?> getProjectByIdentifier(@PathVariable String identifier){
+    public ResponseEntity<Object> getProjectByIdentifier(@PathVariable String identifier){
         try {
-            ProjectDTO projectDTO = projectService.getProjectByIdentifier(identifier);
+            var projectDTO = projectService.getProjectByIdentifier(identifier);
             return new ResponseEntity<>(projectDTO,HttpStatus.OK);
         }catch (Exception exception){
             return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);

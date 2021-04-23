@@ -33,7 +33,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectDTO getProjectByIdentifier(String identifier) {
-            Project project = projectRepository.findByProjectIdentifier(identifier.toUpperCase());
+            var project = projectRepository.findByProjectIdentifier(identifier.toUpperCase());
             if(project==null){
                 throw new ProjectIdException("Project with ID :"+identifier.toUpperCase()+" does not Exists");
             }
