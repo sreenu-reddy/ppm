@@ -1,6 +1,7 @@
 package com.sree.ppm.services;
 
 
+import com.sree.ppm.domains.Project;
 import com.sree.ppm.exceptions.ProjectIdException;
 import com.sree.ppm.api.v1.mapper.ProjectMapper;
 import com.sree.ppm.api.v1.models.ProjectDTO;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProjectServiceImpl implements ProjectService {
    private final ProjectRepository projectRepository;
-   private final static ProjectMapper projectMapper = ProjectMapper.INSTANCE;
+   private static final ProjectMapper projectMapper = ProjectMapper.INSTANCE;
     public ProjectServiceImpl( ProjectRepository projectRepository) {
         this.projectRepository = projectRepository;
     }
@@ -28,5 +29,14 @@ public class ProjectServiceImpl implements ProjectService {
             }
 
 
+    }
+
+    @Override
+    public ProjectDTO getProjectByIdentifier(String identifier) {
+            Project project = projectRepository.findByProjectIdentifier(identifier.toUpperCase());
+            if(project==null){
+                throw new ProjectIdException("Project with ID :"+identifier.toUpperCase()+" does not Exists");
+            }
+            return projectMapper.projectToProjectDTO(project);
     }
 }

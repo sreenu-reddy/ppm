@@ -5,10 +5,7 @@ import com.sree.ppm.services.ProjectService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -32,5 +29,16 @@ public class ProjectController {
             return new ResponseEntity<>(errorsMap,HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(projectService.createNewProject(project), HttpStatus.CREATED);
+    }
+
+
+    @GetMapping("/{identifier}")
+    public ResponseEntity<?> getProjectByIdentifier(@PathVariable String identifier){
+        try {
+            ProjectDTO projectDTO = projectService.getProjectByIdentifier(identifier);
+            return new ResponseEntity<>(projectDTO,HttpStatus.OK);
+        }catch (Exception exception){
+            return new ResponseEntity<>(exception.getMessage(),HttpStatus.BAD_REQUEST);
+        }
     }
 }
