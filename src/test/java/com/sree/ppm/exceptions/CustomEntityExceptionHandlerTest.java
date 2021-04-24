@@ -26,4 +26,5 @@ class CustomEntityExceptionHandlerTest {
         assertEquals(response.getClass().getDeclaredField("projectIdentifier"),responseEntity.getBody().getClass().getDeclaredField("projectIdentifier"));
         assertEquals(response.getClass().getDeclaredMethod("getProjectIdentifier"),responseEntity.getBody().getClass().getDeclaredMethod("getProjectIdentifier"));
     }
+
 }

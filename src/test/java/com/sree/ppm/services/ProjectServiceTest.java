@@ -169,5 +169,28 @@ class ProjectServiceTest {
         assertThrows(ProjectIdException.class,()->projectService.deleteProject(project.getProjectIdentifier()));
     }
 
+    @Test
+    void updateProject(){
+//        Given
+        ProjectDTO projectDTO = new ProjectDTO();
+        projectDTO.setId(1L);
+        projectDTO.setProjectName("Name");
+
+        Project savedProject = new Project();
+        savedProject.setProjectName(projectDTO.getProjectName());
+        savedProject.setId(1L);
+        savedProject.setDescription(projectDTO.getDescription());
+
+        given(projectRepository.save(any(Project.class))).willReturn(savedProject);
+
+//        When
+        ProjectDTO projectDTO1 = projectService.updateProject(1L,projectDTO);
+//        Then
+        assertEquals(projectDTO1.getProjectName(),savedProject.getProjectName());
+        assertEquals(projectDTO1.getId(),savedProject.getId());
+        assertEquals(projectDTO1.getStartDate(),savedProject.getStartDate());
+        then(projectRepository).should().save(any(Project.class));
+        then(projectRepository).shouldHaveNoMoreInteractions();
+    }
 
 }

@@ -7,10 +7,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v1/projects")
@@ -55,6 +57,23 @@ public class ProjectController {
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateProject(@PathVariable Long id, @RequestBody ProjectDTO projectDTO){
+        return new ResponseEntity<>(projectService.updateProject(id,projectDTO),HttpStatus.OK);
+    }
+
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<Object> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        String name = ex.getName();
+        String type = Objects.requireNonNull(ex.getRequiredType()).getSimpleName();
+        Object value = ex.getValue();
+        String message = String.format("'%s' should be a valid '%s' and '%s' isn't",
+                name, type, value);
+        return new ResponseEntity<>(message,HttpStatus.BAD_REQUEST);
 
     }
 }

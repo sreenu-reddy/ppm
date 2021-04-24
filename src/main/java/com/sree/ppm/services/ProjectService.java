@@ -10,4 +10,5 @@ public interface ProjectService {
    ProjectDTO getProjectByIdentifier(String identifier);
    ProjectListDTO getAllProjects();
    void deleteProject(String projectId);
+   ProjectDTO updateProject(Long id,ProjectDTO projectDTO);
 }

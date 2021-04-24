@@ -267,4 +267,62 @@ class ProjectControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    void UpdateProject(){
+//        given
+        ProjectDTO projectDTO = new ProjectDTO();
+        projectDTO.setDescription("des");
+        projectDTO.setId(1L);
+
+        ProjectDTO returnedDto = new ProjectDTO();
+        returnedDto.setId(projectDTO.getId());
+        returnedDto.setDescription(projectDTO.getDescription());
+        given(projectService.updateProject(anyLong(),any(ProjectDTO.class))).willReturn(returnedDto);
+
+//        when
+        var responseEntity = controller.updateProject(1L,projectDTO);
+
+        assertEquals(HttpStatus.OK,responseEntity.getStatusCode());
+
+    }
+
+    @Test
+    void UpdateProjectStatusIsOk() throws Exception {
+//        given
+        ProjectDTO projectDTO = new ProjectDTO();
+        projectDTO.setDescription("des");
+        projectDTO.setId(1L);
+
+        ProjectDTO returnedDto = new ProjectDTO();
+        returnedDto.setId(projectDTO.getId());
+        returnedDto.setDescription(projectDTO.getDescription());
+        given(projectService.updateProject(anyLong(),any(ProjectDTO.class))).willReturn(returnedDto);
+
+//        then
+
+        mockMvc.perform(put("/api/v1/projects/1")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(mapper.writeValueAsString(projectDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.description",equalTo("des")));
+        then(projectService).should().updateProject(anyLong(),any(ProjectDTO.class));
+        then(projectService).shouldHaveNoMoreInteractions();
+
+    }
+
+    @Test
+    void UpdateProjectStatusIs400() throws Exception {
+
+//        Given
+        ProjectDTO projectDTO = new ProjectDTO();
+        projectDTO.setDescription("des");
+        projectDTO.setId(1L);
+
+//        Then
+        mockMvc.perform(put("/api/v1/projects/kkkk")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(projectDTO)))
+                .andExpect(status().isBadRequest());
+    }
+
 }

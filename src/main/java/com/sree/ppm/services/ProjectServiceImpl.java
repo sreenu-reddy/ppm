@@ -1,7 +1,6 @@
 package com.sree.ppm.services;
 
 import com.sree.ppm.api.v1.models.ProjectListDTO;
-import com.sree.ppm.domains.Project;
 import com.sree.ppm.exceptions.ProjectIdException;
 import com.sree.ppm.api.v1.mapper.ProjectMapper;
 import com.sree.ppm.api.v1.models.ProjectDTO;
@@ -51,12 +50,21 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public void deleteProject(String projectId) {
-        var project = projectRepository.findByProjectIdentifier(projectId);
+        var project = projectRepository.findByProjectIdentifier(projectId.toUpperCase());
         if(project!=null){
             projectRepository.delete(project);
         }else {
             throw new ProjectIdException("Project with ID :"+projectId.toUpperCase()+" does not Exists");
         }
+    }
+
+    @Override
+    public ProjectDTO updateProject(Long id,ProjectDTO projectDTO) {
+        var detachedProject = projectMapper.projectDTOToProject(projectDTO);
+        detachedProject.setId(id);
+        var savedProject = projectRepository.save(detachedProject);
+
+        return projectMapper.projectToProjectDTO(savedProject);
     }
 
 
