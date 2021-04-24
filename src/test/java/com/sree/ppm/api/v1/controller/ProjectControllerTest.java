@@ -24,12 +24,11 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.BDDMockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -37,6 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ProjectControllerTest {
 
     ProjectController controller;
+
     @Mock
     ProjectService projectService;
 
@@ -207,4 +207,64 @@ class ProjectControllerTest {
         then(projectService).should().getAllProjects();
         then(projectService).shouldHaveNoMoreInteractions();
     }
+
+    @Test
+    void getAllProjectStatusOk() throws Exception {
+//        given
+        List<ProjectDTO> projectDTOS = new ArrayList<>();
+        ProjectDTO projectDTO = new ProjectDTO();
+        projectDTO.setId(1L);
+        projectDTOS.add(projectDTO);
+        ProjectListDTO projectListDTO = new ProjectListDTO(projectDTOS);
+        given(projectService.getAllProjects()).willReturn((projectListDTO));
+
+//        then
+        mockMvc.perform(get("/api/v1/projects")
+        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.projects", hasSize(1)));
+    }
+
+
+    @Test
+    void deleteProject(){
+//        Given
+        Project project = new Project();
+        project.setId(1L);
+        project.setProjectName("name");
+        project.setProjectIdentifier("iden");
+//        when
+        controller.deleteProject(project.getProjectIdentifier());
+
+//        then
+        then(projectService).should().deleteProject(any(String.class));
+        then(projectService).shouldHaveNoMoreInteractions();
+
+
+    }
+
+    @Test
+    void deleteProjectStatusOK() throws Exception {
+//        Given
+        Project project = new Project();
+        project.setId(1L);
+        project.setProjectName("name");
+        project.setProjectIdentifier("iden");
+//        when
+        mockMvc.perform(delete("/api/v1/projects/iden")
+        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+    @Test
+    void deleteProjectStatus400() throws Exception {
+        Project project = new Project();
+        project.setId(1L);
+        project.setProjectName("name");
+        willThrow(ProjectIdException.class).given(projectService).deleteProject(null);
+//        when
+        mockMvc.perform(delete("/api/v1/projects/k")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
 }

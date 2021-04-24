@@ -47,4 +47,14 @@ public class ProjectController {
     public ResponseEntity<ProjectListDTO> getAllProject(){
         return new ResponseEntity<>(projectService.getAllProjects(),HttpStatus.OK);
     }
+    @DeleteMapping("/{projectId}")
+    public ResponseEntity<Object> deleteProject(@PathVariable String projectId){
+        try {
+            projectService.deleteProject(projectId);
+            return new ResponseEntity<>("Project with ID: "+projectId.toUpperCase()+" has been deleted successfully",HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
+
+    }
 }

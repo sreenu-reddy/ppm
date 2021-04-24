@@ -9,4 +9,5 @@ public interface ProjectService {
    ProjectDTO createNewProject(ProjectDTO project);
    ProjectDTO getProjectByIdentifier(String identifier);
    ProjectListDTO getAllProjects();
+   void deleteProject(String projectId);
 }

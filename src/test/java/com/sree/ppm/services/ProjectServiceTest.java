@@ -20,8 +20,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.nullable;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ProjectServiceTest {
@@ -141,6 +140,34 @@ class ProjectServiceTest {
         assertEquals(1,projects.getProjects().size());
     }
 
+    @Test
+    void deleteProject(){
+//        given
+        Project project = new Project();
+        project.setId(1L);
+        project.setProjectName("ProjectName");
+        project.setProjectIdentifier("Identifier");
+        project.setDescription("Description");
+        given(projectRepository.findByProjectIdentifier(any())).willReturn(project);
+//        When
+        projectService.deleteProject(project.getProjectIdentifier());
+
+//        then
+        then(projectRepository).should().delete(project);
+        then(projectRepository).shouldHaveNoMoreInteractions();
+    }
+
+    @Test
+    void deleteProjectThrowsProIdExp(){
+        //        given
+        Project project = new Project();
+        project.setId(1L);
+        project.setProjectIdentifier("iden");
+       given(projectRepository.findByProjectIdentifier(any())).willReturn(nullable(Project.class));
+
+//        then
+        assertThrows(ProjectIdException.class,()->projectService.deleteProject(project.getProjectIdentifier()));
+    }
 
 
 }
