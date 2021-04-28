@@ -1,5 +1,6 @@
 package com.sree.ppm.api.v1.models;
 
+import com.sree.ppm.domains.BackLog;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -18,4 +19,5 @@ public class ProjectDTO {
     private String description;
     private Date startDate;
     private Date endDate;
+    private BackLog backLog;
 }

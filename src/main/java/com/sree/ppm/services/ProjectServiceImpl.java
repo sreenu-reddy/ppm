@@ -1,9 +1,11 @@
 package com.sree.ppm.services;
 
 import com.sree.ppm.api.v1.models.ProjectListDTO;
+import com.sree.ppm.domains.BackLog;
 import com.sree.ppm.exceptions.ProjectIdException;
 import com.sree.ppm.api.v1.mapper.ProjectMapper;
 import com.sree.ppm.api.v1.models.ProjectDTO;
+import com.sree.ppm.repositories.BackLogRepository;
 import com.sree.ppm.repositories.ProjectRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,15 +17,21 @@ import java.util.stream.StreamSupport;
 public class ProjectServiceImpl implements ProjectService {
    private final ProjectRepository projectRepository;
    private static final ProjectMapper projectMapper = ProjectMapper.INSTANCE;
-    public ProjectServiceImpl( ProjectRepository projectRepository) {
+   private final BackLogRepository backLogRepository;
+    public ProjectServiceImpl(ProjectRepository projectRepository, BackLogRepository backLogRepository) {
         this.projectRepository = projectRepository;
+        this.backLogRepository = backLogRepository;
     }
 
     @Override
     public ProjectDTO createNewProject(ProjectDTO projectDTO) {
             try{
                 var detachedProject = projectMapper.projectDTOToProject(projectDTO);
-                detachedProject.setProjectIdentifier(detachedProject.getProjectIdentifier().toUpperCase());
+                    BackLog backLog = new BackLog();
+                    backLog.setProject(detachedProject);
+                    backLog.setProjectIdentifier(detachedProject.getProjectIdentifier().toUpperCase());
+                    detachedProject.setBackLog(backLog);
+                    detachedProject.setProjectIdentifier(detachedProject.getProjectIdentifier().toUpperCase());
                 var savedProject = projectRepository.save(detachedProject);
                 return  projectMapper.projectToProjectDTO(savedProject);
             }catch (Exception exception){
@@ -60,8 +68,10 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectDTO updateProject(Long id,ProjectDTO projectDTO) {
+
         var detachedProject = projectMapper.projectDTOToProject(projectDTO);
         detachedProject.setId(id);
+        detachedProject.setBackLog(backLogRepository.findByProjectIdentifier(detachedProject.getProjectIdentifier().toUpperCase()));
         var savedProject = projectRepository.save(detachedProject);
 
         return projectMapper.projectToProjectDTO(savedProject);

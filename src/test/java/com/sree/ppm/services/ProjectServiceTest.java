@@ -2,9 +2,11 @@ package com.sree.ppm.services;
 
 
 import com.sree.ppm.api.v1.models.ProjectListDTO;
+import com.sree.ppm.domains.BackLog;
 import com.sree.ppm.exceptions.ProjectIdException;
 import com.sree.ppm.api.v1.models.ProjectDTO;
 import com.sree.ppm.domains.Project;
+import com.sree.ppm.repositories.BackLogRepository;
 import com.sree.ppm.repositories.ProjectRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +28,9 @@ import static org.mockito.BDDMockito.*;
 class ProjectServiceTest {
     @Mock
     ProjectRepository projectRepository;
+    @Mock
+    BackLogRepository backLogRepository;
+
     ProjectService projectService;
 
     @Captor
@@ -34,7 +39,7 @@ class ProjectServiceTest {
 
     @BeforeEach
     void setUp() {
-        projectService = new ProjectServiceImpl(projectRepository);
+        projectService = new ProjectServiceImpl(projectRepository, backLogRepository);
     }
 
 
@@ -46,12 +51,18 @@ class ProjectServiceTest {
         project.setProjectName("ProjectName");
         project.setProjectIdentifier("Identifier");
         project.setDescription("Description");
+        BackLog backLog = new BackLog();
+        backLog.setId(1L);
+        backLog.setProject(project);
+        backLog.setProjectIdentifier(project.getProjectIdentifier());
+        project.setBackLog(backLog);
 
         ProjectDTO projectDTO = new ProjectDTO();
         projectDTO.setId(project.getId());
         projectDTO.setProjectName(project.getProjectName());
         projectDTO.setProjectIdentifier(project.getProjectIdentifier());
         projectDTO.setDescription(project.getDescription());
+        projectDTO.setBackLog(project.getBackLog());
 
         given(projectRepository.save(any(Project.class))).willReturn(project);
 //        When
@@ -63,6 +74,8 @@ class ProjectServiceTest {
         assertEquals("ProjectName",projectDTO1.getProjectName());
         assertEquals("Identifier",projectDTO1.getProjectIdentifier());
         assertEquals("Description",projectDTO1.getDescription());
+        assertEquals(1L,projectDTO1.getBackLog().getId());
+        assertEquals(project.getProjectIdentifier(),projectDTO1.getBackLog().getProjectIdentifier());
         assertNull(projectDTO1.getStartDate());
         assertNull(projectDTO1.getEndDate());
     }
@@ -166,22 +179,32 @@ class ProjectServiceTest {
        given(projectRepository.findByProjectIdentifier(any())).willReturn(nullable(Project.class));
 
 //        then
-        assertThrows(ProjectIdException.class,()->projectService.deleteProject(project.getProjectIdentifier()));
+        assertThrows(ProjectIdException.class,()->projectService.deleteProject("iden"));
     }
 
     @Test
     void updateProject(){
 //        Given
+        BackLog backLog = new BackLog();
         ProjectDTO projectDTO = new ProjectDTO();
         projectDTO.setId(1L);
         projectDTO.setProjectName("Name");
+        projectDTO.setProjectIdentifier("iden");
 
         Project savedProject = new Project();
         savedProject.setProjectName(projectDTO.getProjectName());
         savedProject.setId(1L);
         savedProject.setDescription(projectDTO.getDescription());
+        savedProject.setProjectIdentifier(projectDTO.getProjectIdentifier());
+        savedProject.setBackLog(backLog);
+
+
+        backLog.setId(1L);
+        backLog.setProject(savedProject);
+        backLog.setProjectIdentifier(savedProject.getProjectIdentifier());
 
         given(projectRepository.save(any(Project.class))).willReturn(savedProject);
+        given(backLogRepository.findByProjectIdentifier(anyString())).willReturn(backLog);
 
 //        When
         ProjectDTO projectDTO1 = projectService.updateProject(1L,projectDTO);
@@ -189,7 +212,11 @@ class ProjectServiceTest {
         assertEquals(projectDTO1.getProjectName(),savedProject.getProjectName());
         assertEquals(projectDTO1.getId(),savedProject.getId());
         assertEquals(projectDTO1.getStartDate(),savedProject.getStartDate());
+        assertEquals(1L,projectDTO1.getBackLog().getId());
+        assertEquals(savedProject.getProjectIdentifier(),projectDTO1.getBackLog().getProjectIdentifier());
         then(projectRepository).should().save(any(Project.class));
+        then(projectRepository).shouldHaveNoMoreInteractions();
+        then(backLogRepository).should().findByProjectIdentifier(anyString());
         then(projectRepository).shouldHaveNoMoreInteractions();
     }
 

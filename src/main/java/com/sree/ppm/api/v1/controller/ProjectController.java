@@ -71,7 +71,7 @@ public class ProjectController {
         String name = ex.getName();
         String type = Objects.requireNonNull(ex.getRequiredType()).getSimpleName();
         Object value = ex.getValue();
-        String message = String.format("'%s' should be a valid '%s' and '%s' isn't",
+        var message = String.format("'%s' should be a valid '%s' and '%s' isn't",
                 name, type, value);
         return new ResponseEntity<>(message,HttpStatus.BAD_REQUEST);
 

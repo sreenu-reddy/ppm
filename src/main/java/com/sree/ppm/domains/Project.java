@@ -28,5 +28,7 @@ public class Project {
     private Date startDate;
     @JsonFormat(pattern = "yyyy-mm-dd")
     private Date endDate;
+    @OneToOne(fetch = FetchType.EAGER,mappedBy = "project",cascade = CascadeType.ALL)
+    private BackLog backLog;
 
 }
