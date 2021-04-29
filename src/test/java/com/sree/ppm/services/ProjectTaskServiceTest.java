@@ -112,9 +112,10 @@ class ProjectTaskServiceTest {
     @Test
     void createProjectTaskThrowsExp(){
 //        Given
+        ProjectTaskDTo projectTaskDTo = new ProjectTaskDTo();
         given(backLogRepository.findByProjectIdentifier(anyString())).willThrow(NullPointerException.class);
 //        When
-        assertThrows(ProjectNotFoundException.class,()->projectTaskService.createProjectTask(null,new ProjectTaskDTo()));
+        assertThrows(ProjectNotFoundException.class,()->projectTaskService.createProjectTask(null,projectTaskDTo));
     }
 
 

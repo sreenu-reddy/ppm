@@ -28,8 +28,8 @@ public class BootStrapData implements CommandLineRunner {
     }
 
     private void loadProject(){
-        Project project = new Project();
-        BackLog backLog = new BackLog();
+        var project = new Project();
+        var backLog = new BackLog();
         project.setProjectName("first");
         project.setProjectIdentifier("first");
         project.setDescription("firstDes");
@@ -37,12 +37,12 @@ public class BootStrapData implements CommandLineRunner {
         backLog.setProject(project);
         backLog.setProjectIdentifier(project.getProjectIdentifier());
 
-        ProjectTask projectTask = new ProjectTask();
+        var projectTask = new ProjectTask();
         projectTask.setSummary("firstSum");
         projectTask.setBackLog(backLog);
         projectTask.setProjectIdentifier(backLog.getProjectIdentifier());
 
-        ProjectTask projectTask1 = new ProjectTask();
+        var projectTask1 = new ProjectTask();
         projectTask1.setProjectIdentifier(project.getProjectIdentifier());
         projectTask1.setSummary("SecondSum");
         projectTask1.setBackLog(backLog);

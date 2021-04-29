@@ -1,8 +1,11 @@
 package com.sree.ppm.api.v1.mapper;
 
 import com.sree.ppm.api.v1.models.ProjectTaskDTo;
+import com.sree.ppm.domains.BackLog;
 import com.sree.ppm.domains.ProjectTask;
 import org.junit.jupiter.api.Test;
+
+import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,6 +35,11 @@ class ProjectTaskMapperTest {
         projectTask.setProjectIdentifier(PROJECT_IDENTIFIER);
         projectTask.setPriority(PRIORITY);
         projectTask.setSummary(SUMMARY);
+        projectTask.setBackLog(new BackLog());
+        projectTask.setProjectSequence("seq-1");
+        projectTask.setStatus("to-do");
+        projectTask.setAcceptanceCriteria("criteria");
+        projectTask.setDueDate(new Date());
 
 //        When
         ProjectTaskDTo projectTaskDTo = projectTaskMapper.projectTaskToProjectTaskDTO(projectTask);
@@ -40,10 +48,12 @@ class ProjectTaskMapperTest {
         assertEquals(projectTask.getId(),projectTaskDTo.getId());
         assertEquals(projectTask.getSummary(),projectTaskDTo.getSummary());
         assertEquals(PRIORITY,projectTaskDTo.getPriority());
-        assertNull(projectTaskDTo.getProjectSequence());
-        assertNull(projectTaskDTo.getAcceptanceCriteria());
-        assertNull(projectTaskDTo.getBackLog());
-        assertNull(projectTaskDTo.getStatus());
+        assertNotNull(projectTaskDTo.getProjectSequence());
+        assertNotNull(projectTaskDTo.getAcceptanceCriteria());
+        assertNotNull(projectTaskDTo.getBackLog());
+        assertNotNull(projectTaskDTo.getStatus());
+        assertNotNull(projectTaskDTo.getDueDate());
+        assertNotNull(projectTaskDTo.getProjectIdentifier());
     }
 
 
@@ -65,6 +75,11 @@ class ProjectTaskMapperTest {
         projectTaskDTo.setProjectIdentifier(PROJECT_IDENTIFIER);
         projectTaskDTo.setSummary(SUMMARY);
         projectTaskDTo.setPriority(PRIORITY);
+        projectTaskDTo.setStatus("in-progress");
+        projectTaskDTo.setProjectSequence("seq-2");
+        projectTaskDTo.setBackLog(new BackLog());
+        projectTaskDTo.setAcceptanceCriteria("criteria");
+        projectTaskDTo.setDueDate(new Date());
 //        When
         ProjectTask projectTask = projectTaskMapper.projectTaskDTOToProjectTask(projectTaskDTo);
 //        Then
@@ -73,9 +88,10 @@ class ProjectTaskMapperTest {
         assertEquals(PROJECT_IDENTIFIER,projectTask.getProjectIdentifier());
         assertEquals(PRIORITY,projectTask.getPriority());
         assertEquals(SUMMARY,projectTask.getSummary());
-        assertNull(projectTask.getProjectSequence());
-        assertNull(projectTask.getAcceptanceCriteria());
-        assertNull(projectTask.getBackLog());
-        assertNull(projectTask.getStatus());
+        assertNotNull(projectTask.getProjectSequence());
+        assertNotNull(projectTask.getAcceptanceCriteria());
+        assertNotNull(projectTask.getBackLog());
+        assertNotNull(projectTask.getStatus());
+        assertNotNull(projectTask.getDueDate());
     }
 }

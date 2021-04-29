@@ -24,8 +24,8 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
     @Override
     public ProjectTaskDTo createProjectTask(String projectIdentifier,ProjectTaskDTo projectTaskDTo) {
         try {
-            ProjectTask detachedProject = projectTaskMapper.projectTaskDTOToProjectTask(projectTaskDTo);
-            BackLog backLog = backLogRepository.findByProjectIdentifier(projectIdentifier);
+            var detachedProject = projectTaskMapper.projectTaskDTOToProjectTask(projectTaskDTo);
+            var backLog = backLogRepository.findByProjectIdentifier(projectIdentifier);
             detachedProject.setBackLog(backLog);
             Integer backLogSequence = backLog.getPTSequence();
             backLogSequence++;
@@ -38,7 +38,7 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
             if (detachedProject.getStatus()==null || detachedProject.getStatus().equals("")){
                 detachedProject.setStatus("To-Do");
             }
-            ProjectTask savedTask =projectTaskRepository.save(detachedProject);
+            var savedTask =projectTaskRepository.save(detachedProject);
             return projectTaskMapper.projectTaskToProjectTaskDTO(savedTask);
 
         }catch (Exception e){

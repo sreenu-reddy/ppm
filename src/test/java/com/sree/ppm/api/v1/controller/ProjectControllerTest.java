@@ -258,7 +258,9 @@ class ProjectControllerTest {
 //        when
         mockMvc.perform(delete("/api/v1/projects/iden")
         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$",equalTo("Project with ID: IDEN has been deleted successfully")));
+
     }
     @Test
     void deleteProjectStatus400() throws Exception {

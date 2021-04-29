@@ -46,12 +46,16 @@ class ProjectServiceTest {
     @Test
     void createNewProject() {
 //        given
+        BackLog backLog = new BackLog();
         Project project = new Project();
         project.setId(1L);
         project.setProjectName("ProjectName");
         project.setProjectIdentifier("Identifier");
         project.setDescription("Description");
-        BackLog backLog = new BackLog();
+        project.setBackLog(backLog);
+
+
+
         backLog.setId(1L);
         backLog.setProject(project);
         backLog.setProjectIdentifier(project.getProjectIdentifier());
@@ -75,6 +79,10 @@ class ProjectServiceTest {
         assertEquals("Identifier",projectDTO1.getProjectIdentifier());
         assertEquals("Description",projectDTO1.getDescription());
         assertEquals(1L,projectDTO1.getBackLog().getId());
+        assertEquals(backLog.getProject(),projectDTO1.getBackLog().getProject());
+        assertNotNull(backLog.getProjectIdentifier(),projectDTO1.getBackLog().getProjectIdentifier());
+        assertNotNull(projectDTO1.getBackLog());
+        assertNotNull(projectDTO1.getProjectIdentifier());
         assertEquals(project.getProjectIdentifier(),projectDTO1.getBackLog().getProjectIdentifier());
         assertNull(projectDTO1.getStartDate());
         assertNull(projectDTO1.getEndDate());
@@ -211,6 +219,8 @@ class ProjectServiceTest {
 //        Then
         assertEquals(projectDTO1.getProjectName(),savedProject.getProjectName());
         assertEquals(projectDTO1.getId(),savedProject.getId());
+        assertNotNull(projectDTO1.getId());
+        assertNotNull(projectDTO1.getBackLog());
         assertEquals(projectDTO1.getStartDate(),savedProject.getStartDate());
         assertEquals(1L,projectDTO1.getBackLog().getId());
         assertEquals(savedProject.getProjectIdentifier(),projectDTO1.getBackLog().getProjectIdentifier());

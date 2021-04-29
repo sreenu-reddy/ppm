@@ -1,8 +1,11 @@
 package com.sree.ppm.api.v1.mapper;
 
 import com.sree.ppm.api.v1.models.ProjectDTO;
+import com.sree.ppm.domains.BackLog;
 import com.sree.ppm.domains.Project;
 import org.junit.jupiter.api.Test;
+
+import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,6 +31,12 @@ class ProjectMapperTest {
         Project project = new Project();
         project.setId(ID);
         project.setProjectName(PROJECT_NAME);
+        project.setStartDate(new Date());
+        project.setEndDate(new Date());
+        project.setProjectIdentifier("iden");
+        project.setDescription("desc");
+        project.setBackLog(new BackLog());
+
 
 //        When
         ProjectDTO projectDTO = projectMapper.projectToProjectDTO(project);
@@ -36,10 +45,11 @@ class ProjectMapperTest {
         assertNotNull(projectDTO);
         assertEquals(ID,projectDTO.getId());
         assertEquals(PROJECT_NAME,projectDTO.getProjectName());
-        assertNull(projectDTO.getEndDate());
-        assertNull(projectDTO.getStartDate());
-        assertNull(projectDTO.getProjectIdentifier());
-        assertNull(projectDTO.getDescription());
+      assertNotNull(projectDTO.getStartDate());
+      assertNotNull(projectDTO.getEndDate());
+        assertNotNull(projectDTO.getProjectIdentifier());
+        assertNotNull(projectDTO.getDescription());
+        assertNotNull(projectDTO.getBackLog());
     }
 
     @Test
@@ -57,7 +67,12 @@ class ProjectMapperTest {
 //        Given
         ProjectDTO projectDTO = new ProjectDTO();
         projectDTO.setId(ID);
+        projectDTO.setProjectIdentifier("iden");
+        projectDTO.setDescription("desc");
+        projectDTO.setBackLog(new BackLog());
         projectDTO.setProjectName(PROJECT_NAME);
+        projectDTO.setStartDate(new Date());
+        projectDTO.setEndDate(new Date());
 
 //        When
         Project project = projectMapper.projectDTOToProject(projectDTO);
@@ -66,9 +81,10 @@ class ProjectMapperTest {
         assertNotNull(project);
         assertEquals(ID,project.getId());
         assertEquals(PROJECT_NAME,project.getProjectName());
-        assertNull(project.getProjectIdentifier());
-        assertNull(project.getDescription());
-        assertNull(project.getStartDate());
-        assertNull(project.getEndDate());
+        assertNotNull(project.getProjectIdentifier());
+        assertNotNull(project.getDescription());
+        assertNotNull(project.getStartDate());
+        assertNotNull(project.getEndDate());
+        assertNotNull(project.getBackLog());
     }
 }

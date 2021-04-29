@@ -27,11 +27,10 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectDTO createNewProject(ProjectDTO projectDTO) {
             try{
                 var detachedProject = projectMapper.projectDTOToProject(projectDTO);
-                    BackLog backLog = new BackLog();
+                    var backLog = new BackLog();
                     backLog.setProject(detachedProject);
                     backLog.setProjectIdentifier(detachedProject.getProjectIdentifier().toUpperCase());
                     detachedProject.setBackLog(backLog);
-                    detachedProject.setProjectIdentifier(detachedProject.getProjectIdentifier().toUpperCase());
                 var savedProject = projectRepository.save(detachedProject);
                 return  projectMapper.projectToProjectDTO(savedProject);
             }catch (Exception exception){
