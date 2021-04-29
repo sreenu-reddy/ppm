@@ -15,14 +15,9 @@ public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-
     private String projectName;
-
-
     @Column(updatable = false,unique = true)
     private String projectIdentifier;
-
     @Lob
     private String description;
     @JsonFormat(pattern = "yyyy-mm-dd")

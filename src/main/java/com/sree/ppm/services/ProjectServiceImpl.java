@@ -27,6 +27,7 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectDTO createNewProject(ProjectDTO projectDTO) {
             try{
                 var detachedProject = projectMapper.projectDTOToProject(projectDTO);
+                    detachedProject.setProjectIdentifier(detachedProject.getProjectIdentifier().toUpperCase());
                     var backLog = new BackLog();
                     backLog.setProject(detachedProject);
                     backLog.setProjectIdentifier(detachedProject.getProjectIdentifier().toUpperCase());

@@ -34,7 +34,7 @@ class ProjectTaskServiceImplIT {
 
     @BeforeEach
     void setUp() {
-        projectTaskService = new ProjectTaskServiceImpl(projectTaskRepository,backLogRepository);
+        projectTaskService = new ProjectTaskServiceImpl(projectTaskRepository,backLogRepository, projectRepository);
 
         BootStrapData bootStrapData=new BootStrapData(projectRepository,backLogRepository,projectTaskRepository);
         bootStrapData.run();
@@ -43,7 +43,7 @@ class ProjectTaskServiceImplIT {
     @Test
     void createProjectTask() {
         //        Given
-        BackLog backLog = backLogRepository.findByProjectIdentifier("first");
+        BackLog backLog = backLogRepository.findByProjectIdentifier("FIRST");
         ProjectTaskDTo projectTaskDTo = new ProjectTaskDTo();
         projectTaskDTo.setProjectIdentifier(backLog.getProjectIdentifier());
         projectTaskDTo.setSummary("summary");
@@ -66,7 +66,7 @@ class ProjectTaskServiceImplIT {
     @Test
     void createProjectTaskWithEmptyStatus() {
         //        Given
-        BackLog backLog = backLogRepository.findByProjectIdentifier("first");
+        BackLog backLog = backLogRepository.findByProjectIdentifier("FIRST");
         ProjectTaskDTo projectTaskDTo = new ProjectTaskDTo();
         projectTaskDTo.setProjectIdentifier(backLog.getProjectIdentifier());
         projectTaskDTo.setSummary("summary");

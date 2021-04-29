@@ -23,7 +23,7 @@ public class BackLog {
     @JsonIgnore
     private Project project;
 //    one to many with projectTask
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "backLog")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "backLog",fetch = FetchType.EAGER)
     private List<ProjectTask> projectTasks = new ArrayList<>();
 
 }

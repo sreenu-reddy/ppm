@@ -31,9 +31,9 @@ public class BootStrapData implements CommandLineRunner {
         var project = new Project();
         var backLog = new BackLog();
         project.setProjectName("first");
-        project.setProjectIdentifier("first");
+        project.setProjectIdentifier("FIRST");
         project.setDescription("firstDes");
-
+        project.setBackLog(backLog);
         backLog.setProject(project);
         backLog.setProjectIdentifier(project.getProjectIdentifier());
 

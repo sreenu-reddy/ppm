@@ -16,7 +16,6 @@ public class ProjectTask {
     private Long id;
     @Column(updatable = false)
     private String projectSequence;
-    @NotBlank(message = "Please provide the summary of the projectTask")
     private String summary;
     private String acceptanceCriteria;
     private String status;
@@ -25,7 +24,7 @@ public class ProjectTask {
     @Column(updatable = false)
     private String projectIdentifier;
 //    many to one with backLog
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.REFRESH)
     @JoinColumn(name = "backLogId",updatable = false,nullable = false)
     @JsonIgnore
     private BackLog backLog;

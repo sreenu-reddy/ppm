@@ -3,9 +3,11 @@ package com.sree.ppm.api.v1.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sree.ppm.api.v1.mapper.ProjectTaskMapper;
 import com.sree.ppm.api.v1.models.ProjectTaskDTo;
+import com.sree.ppm.api.v1.models.ProjectTaskListDTO;
 import com.sree.ppm.domains.BackLog;
 import com.sree.ppm.domains.Project;
 import com.sree.ppm.domains.ProjectTask;
+import com.sree.ppm.exceptions.ProjectNotFoundException;
 import com.sree.ppm.services.ProjectTaskService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +25,9 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -158,5 +163,63 @@ class BackLogControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.summary",equalTo("Please provide the summary of the projectTask")));
 
+    }
+
+    @Test
+    void getBackLogById(){
+//        Given
+        ProjectTaskDTo projectTaskDTo = new ProjectTaskDTo();
+        projectTaskDTo.setId(1L);
+
+        ProjectTaskDTo projectTaskDTo1 = new ProjectTaskDTo();
+        projectTaskDTo1.setId(2L);
+
+        List<ProjectTaskDTo> projectTaskDTos = new ArrayList<>();
+        projectTaskDTos.add(projectTaskDTo);
+        projectTaskDTos.add(projectTaskDTo1);
+
+        ProjectTaskListDTO listDTO = new ProjectTaskListDTO(projectTaskDTos);
+
+          given(projectTaskService.getAllProjectTasks(anyString())).willReturn(listDTO);
+//        When
+         var result = backLogController.getBackLogById(PROJECT_IDENTIFIER);
+//        Then
+        assertNotNull(result.getBody());
+        assertEquals(HttpStatus.OK,result.getStatusCode());
+    }
+
+
+    @Test
+    void getBackLogStatusOk() throws Exception {
+//        Given
+        ProjectTaskDTo projectTaskDTo = new ProjectTaskDTo();
+        projectTaskDTo.setId(1L);
+
+        ProjectTaskDTo projectTaskDTo1 = new ProjectTaskDTo();
+        projectTaskDTo1.setId(2L);
+
+        List<ProjectTaskDTo> projectTaskDTos = new ArrayList<>();
+        projectTaskDTos.add(projectTaskDTo);
+        projectTaskDTos.add(projectTaskDTo1);
+
+        ProjectTaskListDTO listDTO = new ProjectTaskListDTO(projectTaskDTos);
+
+        given(projectTaskService.getAllProjectTasks(anyString())).willReturn(listDTO);
+
+//        When
+        mockMvc.perform(get("/api/v1/backlog/iden")
+        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getBackLogStatus400() throws Exception {
+//        Given
+        given(projectTaskService.getAllProjectTasks(anyString())).willThrow(ProjectNotFoundException.class);
+
+//        then
+        mockMvc.perform(get("/api/v1/backlog/idenhhhhh")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 }
