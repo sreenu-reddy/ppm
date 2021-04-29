@@ -33,12 +33,20 @@ public class BackLogController {
     }
 
     @GetMapping("/{backLogId}")
-    public ResponseEntity<?> getBackLogById(@PathVariable String backLogId ){
+    public ResponseEntity<Object> getBackLogById(@PathVariable String backLogId ){
         try {
             return new ResponseEntity<>(projectTaskService.getAllProjectTasks(backLogId),HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
+    }
 
+    @GetMapping("/{backLogID}/{ptSeq}")
+    public ResponseEntity<Object> getProjectTaskByProjectSeq(@PathVariable String backLogID,@PathVariable String ptSeq){
+        try {
+            return new ResponseEntity<>(projectTaskService.getProjectTaskByProjectSeq(backLogID,ptSeq),HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
     }
 }

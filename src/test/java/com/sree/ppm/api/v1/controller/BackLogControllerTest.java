@@ -222,4 +222,102 @@ class BackLogControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    void getProjectTaskByProjectSeq(){
+//        Given
+        ProjectTaskDTo projectTaskDTo = new ProjectTaskDTo();
+        Project project = new Project();
+        BackLog backLog = new BackLog();
+        project.setId(1L);
+        project.setBackLog(backLog);
+        project.setProjectIdentifier(PROJECT_IDENTIFIER);
+
+        backLog.setId(1L);
+        backLog.setProject(project);
+        backLog.setProjectIdentifier(project.getProjectIdentifier());
+
+        projectTaskDTo.setId(1L);
+        projectTaskDTo.setProjectSequence("seq-1");
+        projectTaskDTo.setProjectIdentifier(backLog.getProjectIdentifier());
+        projectTaskDTo.setBackLog(backLog);
+
+        given(projectTaskService.getProjectTaskByProjectSeq(anyString(),anyString())).willReturn(projectTaskDTo);
+
+//        When
+      var responseEntity=  backLogController.getProjectTaskByProjectSeq(PROJECT_IDENTIFIER,"seq-1");
+
+//      then
+        assertNotNull(responseEntity.getBody());
+        assertEquals(HttpStatus.OK,responseEntity.getStatusCode());
+    }
+
+    @Test
+    void getProjectTaskByProjectSeqStatusOk() throws Exception {
+//        given
+        ProjectTaskDTo projectTaskDTo = new ProjectTaskDTo();
+        Project project = new Project();
+        BackLog backLog = new BackLog();
+        project.setId(1L);
+        project.setBackLog(backLog);
+        project.setProjectIdentifier(PROJECT_IDENTIFIER);
+        project.setProjectName(PROJECT_NAME);
+        project.setDescription(DESCRIPTION);
+
+        backLog.setId(1L);
+        backLog.setProject(project);
+        backLog.setProjectIdentifier(project.getProjectIdentifier());
+
+        projectTaskDTo.setId(1L);
+        projectTaskDTo.setProjectSequence("seq-1");
+        projectTaskDTo.setProjectIdentifier(backLog.getProjectIdentifier());
+        projectTaskDTo.setBackLog(backLog);
+
+        given(projectTaskService.getProjectTaskByProjectSeq(anyString(),anyString())).willReturn(projectTaskDTo);
+
+//        Then
+        mockMvc.perform(get("/api/v1/backlog/iden/seq-1")
+        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getProjectTaskByProjectSeqStatus400WhenBackLogIsNull() throws Exception {
+        ProjectTaskDTo projectTaskDTo = new ProjectTaskDTo();
+        Project project = new Project();
+        project.setId(1L);
+        project.setProjectIdentifier(PROJECT_IDENTIFIER);
+        project.setProjectName(PROJECT_NAME);
+        project.setDescription(DESCRIPTION);
+        projectTaskDTo.setId(1L);
+        projectTaskDTo.setProjectSequence("seq-1");
+        given(projectTaskService.getProjectTaskByProjectSeq(anyString(),anyString())).willThrow(ProjectNotFoundException.class);
+
+        //        Then
+        mockMvc.perform(get("/api/v1/backlog/idenh/seq-1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void getProjectTaskByProjectSeqStatus400WhenPTIsNull() throws Exception {
+        Project project = new Project();
+        BackLog backLog = new BackLog();
+        project.setId(1L);
+        project.setBackLog(backLog);
+        project.setProjectIdentifier(PROJECT_IDENTIFIER);
+        project.setProjectName(PROJECT_NAME);
+        project.setDescription(DESCRIPTION);
+
+        backLog.setId(1L);
+        backLog.setProject(project);
+        backLog.setProjectIdentifier(project.getProjectIdentifier());
+        given(projectTaskService.getProjectTaskByProjectSeq(anyString(),anyString())).willThrow(ProjectNotFoundException.class);
+
+        //        Then
+        mockMvc.perform(get("/api/v1/backlog/iden/seq")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
 }

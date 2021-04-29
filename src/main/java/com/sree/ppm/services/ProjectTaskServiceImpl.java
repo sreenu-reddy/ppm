@@ -3,7 +3,6 @@ package com.sree.ppm.services;
 import com.sree.ppm.api.v1.mapper.ProjectTaskMapper;
 import com.sree.ppm.api.v1.models.ProjectTaskDTo;
 import com.sree.ppm.api.v1.models.ProjectTaskListDTO;
-import com.sree.ppm.domains.Project;
 import com.sree.ppm.exceptions.ProjectNotFoundException;
 import com.sree.ppm.repositories.BackLogRepository;
 import com.sree.ppm.repositories.ProjectRepository;
@@ -55,7 +54,7 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
     @Override
     public ProjectTaskListDTO getAllProjectTasks(String backLogId) {
 
-        Project project = projectRepository.findByProjectIdentifier(backLogId);
+        var project = projectRepository.findByProjectIdentifier(backLogId);
         if (project==null){
             throw new ProjectNotFoundException("Project with BackLogId: "+backLogId.toUpperCase()+" does not exists");
         }else {
@@ -63,4 +62,29 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
                     .map(projectTaskMapper::projectTaskToProjectTaskDTO).collect(Collectors.toList()));
         }
     }
+
+    @Override
+    public ProjectTaskDTo getProjectTaskByProjectSeq(String backLogId, String ptSeq) {
+        //make sure we are searching on an existing backlog
+        var backlog = backLogRepository.findByProjectIdentifier(backLogId);
+        if(backlog==null){
+            throw new ProjectNotFoundException("Project with ID: '"+backLogId.toUpperCase()+"' does not exist");
+        }
+
+        //make sure that our task exists
+        var projectTask = projectTaskRepository.findByProjectSequence(ptSeq);
+
+        if(projectTask == null){
+            throw new ProjectNotFoundException("Project Task '"+ptSeq.toUpperCase()+"' not found");
+        }
+
+        //make sure that the backlog/project id in the path corresponds to the right project
+        if(!(projectTask.getProjectIdentifier().equals(backLogId))){
+            throw new ProjectNotFoundException("Project Task '"+ptSeq.toUpperCase()+"' does not exist in project: '"+backLogId.toUpperCase());
+        }
+
+
+        return projectTaskMapper.projectTaskToProjectTaskDTO(projectTask);
+    }
+
 }

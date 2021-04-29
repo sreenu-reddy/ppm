@@ -5,6 +5,9 @@ import com.sree.ppm.BootStrapData;
 import com.sree.ppm.api.v1.mapper.ProjectTaskMapper;
 import com.sree.ppm.api.v1.models.ProjectTaskDTo;
 import com.sree.ppm.domains.BackLog;
+import com.sree.ppm.domains.Project;
+import com.sree.ppm.domains.ProjectTask;
+import com.sree.ppm.exceptions.ProjectNotFoundException;
 import com.sree.ppm.repositories.BackLogRepository;
 import com.sree.ppm.repositories.ProjectRepository;
 import com.sree.ppm.repositories.ProjectTaskRepository;
@@ -16,6 +19,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -86,4 +91,10 @@ class ProjectTaskServiceImplIT {
         assertEquals(backLog.getProject(),projectTaskDTo1.getBackLog().getProject());
         assertEquals(backLog,projectTaskDTo1.getBackLog());
     }
+
+    @Test
+   void getProjectTaskByProjectSeqWillThrowsExp(){
+
+        assertThrows(ProjectNotFoundException.class,()->projectTaskService.getProjectTaskByProjectSeq("FIRST","SEE1-0"));
+   }
 }

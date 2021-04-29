@@ -34,6 +34,8 @@ class ProjectTaskServiceTest {
     public static final String SUMMARY = "summary";
     public static final int PRIORITY = 5;
     public static final String STATUS = "done";
+    public static final String SUMMARY_1 = "Summary_1";
+    public static final String PROJECT_SEQUENCE = "seq-1";
     ProjectTaskService projectTaskService;
 
     @Mock
@@ -139,7 +141,7 @@ class ProjectTaskServiceTest {
         ProjectTask projectTask = new ProjectTask();
         projectTask.setId(1L);
         projectTask.setProjectIdentifier(PROJECT_IDENTIFIER);
-        projectTask.setSummary("Summary_1");
+        projectTask.setSummary(SUMMARY_1);
         projectTask.setBackLog(backLog);
 
         ProjectTask projectTask1 = new ProjectTask();
@@ -172,4 +174,69 @@ class ProjectTaskServiceTest {
         assertThrows(ProjectNotFoundException.class,()->projectTaskService.getAllProjectTasks(PROJECT_IDENTIFIER));
     }
 
+    @Test
+    void getProjectTaskByProjectSeq(){
+//        Given
+        Project project = new Project();
+        BackLog backLog = new BackLog();
+        project.setId(1L);
+        project.setBackLog(backLog);
+
+        backLog.setId(1L);
+        backLog.setProjectIdentifier(PROJECT_IDENTIFIER);
+        backLog.setProject(project);
+        ProjectTask projectTask = new ProjectTask();
+        projectTask.setId(1L);
+        projectTask.setProjectIdentifier(PROJECT_IDENTIFIER);
+        projectTask.setSummary(SUMMARY_1);
+        projectTask.setBackLog(backLog);
+        projectTask.setProjectSequence(PROJECT_SEQUENCE);
+
+        given(backLogRepository.findByProjectIdentifier(anyString())).willReturn(backLog);
+        given(projectTaskRepository.findByProjectSequence(anyString())).willReturn(projectTask);
+//        When
+       var pt= projectTaskService.getProjectTaskByProjectSeq(PROJECT_IDENTIFIER, PROJECT_SEQUENCE);
+
+//        Then
+        assertNotNull(pt);
+        assertEquals(PROJECT_IDENTIFIER,pt.getProjectIdentifier());
+        assertEquals(SUMMARY_1,pt.getSummary());
+        assertEquals(PROJECT_SEQUENCE,pt.getProjectSequence());
+        assertNull(pt.getPriority());
+        assertNull(pt.getDueDate());
+        assertNull(pt.getAcceptanceCriteria());
+        assertEquals(backLog.getId(),pt.getBackLog().getId());
+        then(backLogRepository).should().findByProjectIdentifier(anyString());
+        then(backLogRepository).shouldHaveNoMoreInteractions();
+        then(projectTaskRepository).should().findByProjectSequence(anyString());
+        then(projectTaskRepository).shouldHaveNoMoreInteractions();
+
+    }
+
+    @Test
+    void getProjectTaskByProjectSeqWithNullBackLogExp(){
+//        given
+        given(backLogRepository.findByProjectIdentifier(anyString())).willReturn(null);
+
+//        then
+        assertThrows(ProjectNotFoundException.class,()->projectTaskService.getProjectTaskByProjectSeq(PROJECT_IDENTIFIER,PROJECT_SEQUENCE));
+    }
+
+    @Test
+    void getProjectTaskByProjectSeqWithNullProjectTaskExp(){
+////        given
+        Project project = new Project();
+        BackLog backLog = new BackLog();
+        project.setId(1L);
+        project.setBackLog(backLog);
+
+        backLog.setId(1L);
+        backLog.setProjectIdentifier(PROJECT_IDENTIFIER);
+        backLog.setProject(project);
+        given(backLogRepository.findByProjectIdentifier(anyString())).willReturn(backLog);
+        given(projectTaskRepository.findByProjectSequence(anyString())).willReturn(null);
+
+//        then
+        assertThrows(ProjectNotFoundException.class,()->projectTaskService.getProjectTaskByProjectSeq(PROJECT_IDENTIFIER,PROJECT_SEQUENCE));
+    }
 }

@@ -6,4 +6,5 @@ import com.sree.ppm.api.v1.models.ProjectTaskListDTO;
 public interface ProjectTaskService {
     ProjectTaskDTo createProjectTask(String projectIdentifier,ProjectTaskDTo projectTaskDTo);
     ProjectTaskListDTO getAllProjectTasks(String backLogId);
+    ProjectTaskDTo getProjectTaskByProjectSeq(String backLogId,String ptSeq);
 }

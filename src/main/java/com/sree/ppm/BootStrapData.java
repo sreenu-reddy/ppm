@@ -50,10 +50,35 @@ public class BootStrapData implements CommandLineRunner {
         backLog.getProjectTasks().add(projectTask);
         backLog.getProjectTasks().add(projectTask1);
 
+        Project project1 = new Project();
+        project1.setProjectName("Second");
+        project1.setDescription("description");
+        project1.setProjectIdentifier("SEE1");
+
+        BackLog backLog1 = new BackLog();
+        backLog1.setProject(project1);
+        backLog1.setProjectIdentifier(project1.getProjectIdentifier());
+
+        ProjectTask projectTask2 =new ProjectTask();
+        projectTask2.setProjectSequence(backLog1.getProjectIdentifier()+"-"+0);
+        projectTask2.setSummary("Summary_2");
+        projectTask2.setBackLog(backLog1);
+        projectTask2.setProjectIdentifier(backLog1.getProjectIdentifier());
+
+        backLog1.getProjectTasks().add(projectTask2);
+
+
+
+
         projectRepository.save(project);
+        projectRepository.save(project1);
         backLogRepository.save(backLog);
+        backLogRepository.save(backLog1);
         projectTaskRepository.save(projectTask);
         projectTaskRepository.save(projectTask1);
+        projectTaskRepository.save(projectTask2);
+
+
 
     }
 }
