@@ -1,14 +1,15 @@
 package com.sree.ppm.domains;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
 
 import java.util.Date;
 
-@Entity
 @Data
+@Entity
 public class Project {
 
     @Id
@@ -28,7 +29,8 @@ public class Project {
     private Date startDate;
     @JsonFormat(pattern = "yyyy-mm-dd")
     private Date endDate;
-    @OneToOne(fetch = FetchType.EAGER,mappedBy = "project",cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "project")
+    @JsonIgnore
     private BackLog backLog;
 
 }

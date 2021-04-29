@@ -27,4 +27,14 @@ class CustomEntityExceptionHandlerTest {
         assertEquals(response.getClass().getDeclaredMethod("getProjectIdentifier"),responseEntity.getBody().getClass().getDeclaredMethod("getProjectIdentifier"));
     }
 
+    @Test
+    void handleProjectNotFound(){
+//        When
+        ResponseEntity<Object> responseEntity = customEntityExceptionHandler.handleProjectNotFoundExp(new ProjectNotFoundException(message));
+//         Then
+        assertNotNull(responseEntity.getBody());
+        assertEquals(HttpStatus.BAD_REQUEST,responseEntity.getStatusCode());
+
+    }
+
 }

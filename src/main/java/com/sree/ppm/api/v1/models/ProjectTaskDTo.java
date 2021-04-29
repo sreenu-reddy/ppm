@@ -1,20 +1,16 @@
-package com.sree.ppm.domains;
+package com.sree.ppm.api.v1.models;
+
+
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sree.ppm.domains.BackLog;
 import lombok.Data;
-
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 @Data
-@Entity
-public class ProjectTask {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ProjectTaskDTo {
     private Long id;
-    @Column(updatable = false)
     private String projectSequence;
     @NotBlank(message = "Please provide the summary of the projectTask")
     private String summary;
@@ -22,12 +18,7 @@ public class ProjectTask {
     private String status;
     private Integer priority;
     private Date dueDate;
-    @Column(updatable = false)
     private String projectIdentifier;
-//    many to one with backLog
-    @ManyToOne
-    @JoinColumn(name = "backLogId",updatable = false,nullable = false)
     @JsonIgnore
     private BackLog backLog;
-
 }

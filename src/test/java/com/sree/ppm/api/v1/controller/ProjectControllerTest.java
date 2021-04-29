@@ -34,16 +34,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(MockitoExtension.class)
 class ProjectControllerTest {
-
+    public static final long ID = 1L;
+    public static final String PROJECT_NAME = "ProjectName";
+    public static final String PROJECT_IDENTIFIER = "Identifier";
+    public static final String DESCRIPTION = "Description";
+    public static final String PROJECT_IDENTIFIER1 = "Iden";
+    public static final int EXPECTED_SIZE = 1;
     ProjectController controller;
-
     @Mock
     ProjectService projectService;
-
-    MockMvc mockMvc;
-
     @Mock
     BindingResult bindingResult;
+
+    MockMvc mockMvc;
 
     private final ObjectMapper mapper = new ObjectMapper();
 
@@ -58,18 +61,20 @@ class ProjectControllerTest {
     void createNewProject() throws NoSuchMethodException {
 //        given
         ProjectDTO project = new ProjectDTO();
-        project.setId(1L);
-        project.setProjectName("ProjectName");
-        project.setProjectIdentifier("Identifier");
-        project.setDescription("Description");
+        project.setId(ID);
+        project.setProjectName(PROJECT_NAME);
+        project.setProjectIdentifier(PROJECT_IDENTIFIER);
+        project.setDescription(DESCRIPTION);
         given(projectService.createNewProject(any(ProjectDTO.class))).willReturn(project);
 
 //        When
 
         ResponseEntity<Object> project1 = controller.createNewProject(project,bindingResult);
+        System.out.println(project1);
 
 //        then
-        assertNotNull(project1);
+        assertNotNull(project1.getBody());
+
         assertEquals(HttpStatus.CREATED,project1.getStatusCode());
         assertEquals(project.getClass().getDeclaredMethod("getProjectIdentifier"), Objects.requireNonNull(project1.getBody()).getClass().getDeclaredMethod("getProjectIdentifier"));
         then(projectService).should().createNewProject(any(ProjectDTO.class));
@@ -80,10 +85,10 @@ class ProjectControllerTest {
     void createNewProjectStatusIsOK() throws Exception {
         //        given
         ProjectDTO project = new ProjectDTO();
-        project.setId(1L);
-        project.setProjectName("ProjectName");
-        project.setProjectIdentifier("Iden");
-        project.setDescription("Description");
+        project.setId(ID);
+        project.setProjectName(PROJECT_NAME);
+        project.setProjectIdentifier(PROJECT_IDENTIFIER1);
+        project.setDescription(DESCRIPTION);
         given(projectService.createNewProject(any(ProjectDTO.class))).willReturn(project);
 
 //        When
@@ -91,8 +96,8 @@ class ProjectControllerTest {
         .contentType(MediaType.APPLICATION_JSON)
         .content(mapper.writeValueAsString(project)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.projectName",equalTo("ProjectName")))
-                .andExpect(jsonPath("$.projectIdentifier",equalTo("Iden")))
+                .andExpect(jsonPath("$.projectName",equalTo(PROJECT_NAME)))
+                .andExpect(jsonPath("$.projectIdentifier",equalTo(PROJECT_IDENTIFIER1)))
                 .andExpect(jsonPath("$.startDate",equalTo(null)));
     }
 
@@ -100,10 +105,10 @@ class ProjectControllerTest {
     void createNewProjectStatusIs400() throws Exception {
 //        given
         Project project = new Project();
-        project.setId(1L);
-        project.setProjectName("ProjectName");
+        project.setId(ID);
+        project.setProjectName(PROJECT_NAME);
         project.setProjectIdentifier("Iden8888");
-        project.setDescription("Description");
+        project.setDescription(DESCRIPTION);
 
 
 //        When
@@ -119,7 +124,7 @@ class ProjectControllerTest {
     void createNewProjectStatusIs400withEmptyProject() throws Exception {
 //        given
         Project project = new Project();
-        project.setId(1L);
+        project.setId(ID);
 
 
 //        When
@@ -137,15 +142,15 @@ class ProjectControllerTest {
     void getProjectByIdentifier(){
 //        Given
         ProjectDTO projectDTO = new ProjectDTO();
-        projectDTO.setId(1L);
-        projectDTO.setProjectName("Name");
-        projectDTO.setProjectIdentifier("Identifier");
-        projectDTO.setDescription("Description");
+        projectDTO.setId(ID);
+        projectDTO.setProjectName(PROJECT_NAME);
+        projectDTO.setProjectIdentifier(PROJECT_IDENTIFIER);
+        projectDTO.setDescription(DESCRIPTION);
         given(projectService.getProjectByIdentifier(any(String.class))).willReturn(projectDTO);
 
 
 //        When
-       var result = controller.getProjectByIdentifier("Identifier");
+       var result = controller.getProjectByIdentifier(PROJECT_IDENTIFIER);
 
 //        Then
         assertEquals(ProjectDTO.class, Objects.requireNonNull(result.getBody()).getClass());
@@ -156,17 +161,17 @@ class ProjectControllerTest {
     void getProjectByIdentifierStatusIsOk() throws Exception {
         //        Given
         ProjectDTO projectDTO = new ProjectDTO();
-        projectDTO.setId(1L);
-        projectDTO.setProjectName("Name");
-        projectDTO.setProjectIdentifier("Iden");
-        projectDTO.setDescription("Description");
+        projectDTO.setId(ID);
+        projectDTO.setProjectName(PROJECT_NAME);
+        projectDTO.setProjectIdentifier(PROJECT_IDENTIFIER1);
+        projectDTO.setDescription(DESCRIPTION);
         given(projectService.getProjectByIdentifier(any(String.class))).willReturn(projectDTO);
 
 //        Then
         mockMvc.perform(get("/api/v1/projects/Iden")
         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.projectIdentifier",equalTo("Iden")))
+                .andExpect(jsonPath("$.projectIdentifier",equalTo(PROJECT_IDENTIFIER1)))
                 .andExpect(jsonPath("$.startDate",equalTo(null)));
     }
 
@@ -174,10 +179,10 @@ class ProjectControllerTest {
     void getProjectByIdentifierStatusIs404() throws Exception {
         //        Given
         ProjectDTO projectDTO = new ProjectDTO();
-        projectDTO.setId(1L);
-        projectDTO.setProjectName("Name");
-        projectDTO.setProjectIdentifier("Iden");
-        projectDTO.setDescription("Description");
+        projectDTO.setId(ID);
+        projectDTO.setProjectName(PROJECT_NAME);
+        projectDTO.setProjectIdentifier(PROJECT_IDENTIFIER1);
+        projectDTO.setDescription(DESCRIPTION);
         given(projectService.getProjectByIdentifier(any(String.class))).willThrow(ProjectIdException.class);
 
 //        Then
@@ -192,7 +197,7 @@ class ProjectControllerTest {
 //        Given
         List<ProjectDTO> projectDTOS = new ArrayList<>();
         ProjectDTO projectDTO = new ProjectDTO();
-        projectDTO.setId(1L);
+        projectDTO.setId(ID);
         projectDTOS.add(projectDTO);
         ProjectListDTO projectListDTO = new ProjectListDTO(projectDTOS);
         given(projectService.getAllProjects()).willReturn((projectListDTO));
@@ -203,7 +208,7 @@ class ProjectControllerTest {
 //        Then
         assertNotNull(result);
         assertEquals(HttpStatus.OK,result.getStatusCode());
-        assertEquals(1, Objects.requireNonNull(result.getBody()).getProjects().size());
+        assertEquals(EXPECTED_SIZE, Objects.requireNonNull(result.getBody()).getProjects().size());
         then(projectService).should().getAllProjects();
         then(projectService).shouldHaveNoMoreInteractions();
     }
@@ -213,7 +218,7 @@ class ProjectControllerTest {
 //        given
         List<ProjectDTO> projectDTOS = new ArrayList<>();
         ProjectDTO projectDTO = new ProjectDTO();
-        projectDTO.setId(1L);
+        projectDTO.setId(ID);
         projectDTOS.add(projectDTO);
         ProjectListDTO projectListDTO = new ProjectListDTO(projectDTOS);
         given(projectService.getAllProjects()).willReturn((projectListDTO));
@@ -222,7 +227,7 @@ class ProjectControllerTest {
         mockMvc.perform(get("/api/v1/projects")
         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.projects", hasSize(1)));
+                .andExpect(jsonPath("$.projects", hasSize(EXPECTED_SIZE)));
     }
 
 
@@ -230,9 +235,9 @@ class ProjectControllerTest {
     void deleteProject(){
 //        Given
         Project project = new Project();
-        project.setId(1L);
-        project.setProjectName("name");
-        project.setProjectIdentifier("iden");
+        project.setId(ID);
+        project.setProjectName(PROJECT_NAME);
+        project.setProjectIdentifier(PROJECT_IDENTIFIER1);
 //        when
         controller.deleteProject(project.getProjectIdentifier());
 
@@ -247,9 +252,9 @@ class ProjectControllerTest {
     void deleteProjectStatusOK() throws Exception {
 //        Given
         Project project = new Project();
-        project.setId(1L);
-        project.setProjectName("name");
-        project.setProjectIdentifier("iden");
+        project.setId(ID);
+        project.setProjectName(PROJECT_NAME);
+        project.setProjectIdentifier(PROJECT_IDENTIFIER1);
 //        when
         mockMvc.perform(delete("/api/v1/projects/iden")
         .contentType(MediaType.APPLICATION_JSON))
@@ -258,8 +263,8 @@ class ProjectControllerTest {
     @Test
     void deleteProjectStatus400() throws Exception {
         Project project = new Project();
-        project.setId(1L);
-        project.setProjectName("name");
+        project.setId(ID);
+        project.setProjectName(PROJECT_NAME);
         willThrow(ProjectIdException.class).given(projectService).deleteProject(null);
 //        when
         mockMvc.perform(delete("/api/v1/projects/k")
@@ -271,8 +276,8 @@ class ProjectControllerTest {
     void UpdateProject(){
 //        given
         ProjectDTO projectDTO = new ProjectDTO();
-        projectDTO.setDescription("des");
-        projectDTO.setId(1L);
+        projectDTO.setDescription(DESCRIPTION);
+        projectDTO.setId(ID);
 
         ProjectDTO returnedDto = new ProjectDTO();
         returnedDto.setId(projectDTO.getId());
@@ -280,7 +285,7 @@ class ProjectControllerTest {
         given(projectService.updateProject(anyLong(),any(ProjectDTO.class))).willReturn(returnedDto);
 
 //        when
-        var responseEntity = controller.updateProject(1L,projectDTO);
+        var responseEntity = controller.updateProject(ID,projectDTO);
 
         assertEquals(HttpStatus.OK,responseEntity.getStatusCode());
 
@@ -290,8 +295,8 @@ class ProjectControllerTest {
     void UpdateProjectStatusIsOk() throws Exception {
 //        given
         ProjectDTO projectDTO = new ProjectDTO();
-        projectDTO.setDescription("des");
-        projectDTO.setId(1L);
+        projectDTO.setDescription(DESCRIPTION);
+        projectDTO.setId(ID);
 
         ProjectDTO returnedDto = new ProjectDTO();
         returnedDto.setId(projectDTO.getId());
@@ -304,7 +309,7 @@ class ProjectControllerTest {
         .contentType(MediaType.APPLICATION_JSON)
         .content(mapper.writeValueAsString(projectDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.description",equalTo("des")));
+                .andExpect(jsonPath("$.description",equalTo(DESCRIPTION)));
         then(projectService).should().updateProject(anyLong(),any(ProjectDTO.class));
         then(projectService).shouldHaveNoMoreInteractions();
 
@@ -316,7 +321,7 @@ class ProjectControllerTest {
 //        Given
         ProjectDTO projectDTO = new ProjectDTO();
         projectDTO.setDescription("des");
-        projectDTO.setId(1L);
+        projectDTO.setId(ID);
 
 //        Then
         mockMvc.perform(put("/api/v1/projects/kkkk")

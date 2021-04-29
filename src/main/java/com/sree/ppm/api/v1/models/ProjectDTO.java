@@ -1,5 +1,6 @@
 package com.sree.ppm.api.v1.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sree.ppm.domains.BackLog;
 import lombok.Data;
 
@@ -19,5 +20,6 @@ public class ProjectDTO {
     private String description;
     private Date startDate;
     private Date endDate;
+    @JsonIgnore
     private BackLog backLog;
 }
