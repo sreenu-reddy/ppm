@@ -106,4 +106,10 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
         return projectTaskMapper.projectTaskToProjectTaskDTO(savedProjectTask);
 
     }
+
+    @Override
+    public void deleteProjectSeq(String backLogId, String ptSeq) {
+        var projectTaskDTo = this.getProjectTaskByProjectSeq(backLogId,ptSeq);
+        projectTaskRepository.delete(projectTaskMapper.projectTaskDTOToProjectTask(projectTaskDTo));
+    }
 }

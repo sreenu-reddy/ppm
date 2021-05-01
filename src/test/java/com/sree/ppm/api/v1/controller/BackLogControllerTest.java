@@ -62,7 +62,6 @@ class BackLogControllerTest {
     void setUp() {
         backLogController = new BackLogController(projectTaskService);
         mockMvc = MockMvcBuilders.standaloneSetup(backLogController).build();
-
     }
 
     @Test
@@ -103,6 +102,16 @@ class BackLogControllerTest {
     @Test
     void createProjectTaskStatus() throws Exception {
         //        Given
+        ProjectTaskDTo projectTaskDTo = getdTo();
+
+//        Then
+        mockMvc.perform(post("/api/v1/backlog/iden")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(mapper.writeValueAsString(projectTaskDTo)))
+                .andExpect(status().isCreated());
+    }
+
+    private ProjectTaskDTo getdTo() {
         BackLog backLog = new BackLog();
         Project project = new Project();
         List<ProjectTask> projectTasks = new ArrayList<>();
@@ -125,12 +134,7 @@ class BackLogControllerTest {
         projectTaskDTo.setSummary(SUMMARY);
         projectTaskDTo.setProjectSequence(backLog.getProjectIdentifier()+"-"+backLog.getPtSequence());
         projectTaskDTo.setProjectIdentifier(project.getProjectIdentifier());
-
-//        Then
-        mockMvc.perform(post("/api/v1/backlog/iden")
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(mapper.writeValueAsString(projectTaskDTo)))
-                .andExpect(status().isCreated());
+        return projectTaskDTo;
     }
 
     @Test
@@ -230,21 +234,7 @@ class BackLogControllerTest {
     @Test
     void getProjectTaskByProjectSeq(){
 //        Given
-        ProjectTaskDTo projectTaskDTo = new ProjectTaskDTo();
-        Project project = new Project();
-        BackLog backLog = new BackLog();
-        project.setId(ID1);
-        project.setBackLog(backLog);
-        project.setProjectIdentifier(PROJECT_IDENTIFIER);
-
-        backLog.setId(ID1);
-        backLog.setProject(project);
-        backLog.setProjectIdentifier(project.getProjectIdentifier());
-
-        projectTaskDTo.setId(ID1);
-        projectTaskDTo.setProjectSequence(PROJECT_SEQUENCE);
-        projectTaskDTo.setProjectIdentifier(backLog.getProjectIdentifier());
-        projectTaskDTo.setBackLog(backLog);
+        ProjectTaskDTo projectTaskDTo = getTaskDTo();
 
         given(projectTaskService.getProjectTaskByProjectSeq(anyString(),anyString())).willReturn(projectTaskDTo);
 
@@ -255,6 +245,7 @@ class BackLogControllerTest {
         assertNotNull(responseEntity.getBody());
         assertEquals(HttpStatus.OK,responseEntity.getStatusCode());
     }
+
 
     @Test
     void getProjectTaskByProjectSeqStatusOk() throws Exception {
@@ -327,29 +318,7 @@ class BackLogControllerTest {
     @Test
     void updateProjectTask(){
 //        Given
-        ProjectTaskDTo projectTaskDTo = new ProjectTaskDTo();
-        Project project = new Project();
-        BackLog backLog = new BackLog();
-        project.setId(ID1);
-        project.setBackLog(backLog);
-        project.setProjectIdentifier(PROJECT_IDENTIFIER);
-
-        backLog.setId(ID1);
-        backLog.setProject(project);
-        backLog.setProjectIdentifier(project.getProjectIdentifier());
-
-        projectTaskDTo.setId(ID1);
-        projectTaskDTo.setProjectSequence(PROJECT_SEQUENCE);
-        projectTaskDTo.setProjectIdentifier(backLog.getProjectIdentifier());
-        projectTaskDTo.setBackLog(backLog);
-        projectTaskDTo.setSummary(SUMMARY);
-
-        ProjectTaskDTo updatedTask = new ProjectTaskDTo();
-        updatedTask.setId(projectTaskDTo.getId());
-        updatedTask.setBackLog(projectTaskDTo.getBackLog());
-        updatedTask.setProjectIdentifier(projectTaskDTo.getProjectIdentifier());
-        updatedTask.setProjectSequence(PROJECT_SEQUENCE);
-        updatedTask.setSummary(SUMMARY+1);
+        ProjectTaskDTo updatedTask = getProjectTaskDTo();
         given(projectTaskService.updateProjectByProjectSeq(any(ProjectTaskDTo.class),anyString(),anyString())).willReturn(updatedTask);
 //        When
       var response=  backLogController.updateProjectTask(updatedTask,PROJECT_IDENTIFIER,PROJECT_SEQUENCE);
@@ -358,38 +327,12 @@ class BackLogControllerTest {
         assertEquals(HttpStatus.OK,response.getStatusCode());
     }
 
+
+
     @Test
     void updateProjectTaskStatusIsOk() throws Exception {
 //        Given
-        ProjectTaskDTo projectTaskDTo = new ProjectTaskDTo();
-        ProjectTaskDTo updatedTask = new ProjectTaskDTo();
-        Project project = new Project();
-        BackLog backLog = new BackLog();
-        project.setId(ID1);
-        project.setBackLog(backLog);
-        project.setProjectIdentifier(PROJECT_IDENTIFIER);
-        project.setProjectName(PROJECT_NAME);
-        project.setDescription(DESCRIPTION);
-
-        backLog.setId(ID1);
-        backLog.setProject(project);
-        backLog.setProjectIdentifier(project.getProjectIdentifier());
-        backLog.getProjectTasks().add(projectMapper.projectTaskDTOToProjectTask(projectTaskDTo));
-        backLog.getProjectTasks().add(projectMapper.projectTaskDTOToProjectTask(updatedTask));
-
-        projectTaskDTo.setId(ID1);
-        projectTaskDTo.setProjectSequence(PROJECT_SEQUENCE);
-        projectTaskDTo.setProjectIdentifier(backLog.getProjectIdentifier());
-        projectTaskDTo.setBackLog(backLog);
-        projectTaskDTo.setSummary("summary999999");
-
-
-
-        updatedTask.setId(projectTaskDTo.getId());
-        updatedTask.setBackLog(backLog);
-        updatedTask.setProjectIdentifier(projectTaskDTo.getProjectIdentifier());
-        updatedTask.setProjectSequence(PROJECT_SEQUENCE);
-        updatedTask.setSummary("summary7899999999");
+        ProjectTaskDTo updatedTask = getProjectTaskDTo(PROJECT_SEQUENCE);
 
         given(projectTaskService.updateProjectByProjectSeq(any(ProjectTaskDTo.class),anyString(),anyString())).willReturn(updatedTask);
 
@@ -404,6 +347,61 @@ class BackLogControllerTest {
     @Test
     void updateProjectTaskStatusIs400() throws Exception {
 //        given
+        ProjectTaskDTo updatedTask = getProjectTaskDTo("seq-2");
+        given(projectTaskService.updateProjectByProjectSeq(any(ProjectTaskDTo.class),anyString(),anyString())).willThrow(ProjectIdException.class);
+
+//        then
+        mockMvc.perform(put("/api/v1/backlog/iden/seq-1")
+                .contentType(MediaType.APPLICATION_JSON)
+        .content(mapper.writeValueAsString(updatedTask)))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    @Test
+    void deleteProjectSeq(){
+//        Given
+        extracted();
+
+//        When
+     var response=   backLogController.deleteProjectTask(PROJECT_IDENTIFIER,PROJECT_SEQUENCE);
+
+//        Then
+        assertEquals(HttpStatus.OK,response.getStatusCode());
+    }
+
+    @Test
+    void deleteProjectSeqStatusIsOk() throws Exception {
+//        given
+        extracted();
+//        Then
+
+        mockMvc.perform(delete("/api/v1/backlog/iden/seq-1")
+        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    private ProjectTaskDTo getTaskDTo() {
+        ProjectTaskDTo projectTaskDTo = new ProjectTaskDTo();
+        Project project = new Project();
+        BackLog backLog = new BackLog();
+        project.setId(ID1);
+        project.setBackLog(backLog);
+        project.setProjectIdentifier(PROJECT_IDENTIFIER);
+
+        backLog.setId(ID1);
+        backLog.setProject(project);
+        backLog.setProjectIdentifier(project.getProjectIdentifier());
+
+        projectTaskDTo.setId(ID1);
+        projectTaskDTo.setProjectSequence(PROJECT_SEQUENCE);
+        projectTaskDTo.setProjectIdentifier(backLog.getProjectIdentifier());
+        projectTaskDTo.setBackLog(backLog);
+        return projectTaskDTo;
+    }
+
+
+    private ProjectTaskDTo getProjectTaskDTo(String s) {
         ProjectTaskDTo projectTaskDTo = new ProjectTaskDTo();
         ProjectTaskDTo updatedTask = new ProjectTaskDTo();
         Project project = new Project();
@@ -426,20 +424,48 @@ class BackLogControllerTest {
         projectTaskDTo.setBackLog(backLog);
         projectTaskDTo.setSummary("summary999999");
 
-
-
         updatedTask.setId(projectTaskDTo.getId());
         updatedTask.setBackLog(backLog);
         updatedTask.setProjectIdentifier(projectTaskDTo.getProjectIdentifier());
-        updatedTask.setProjectSequence("seq-2");
+        updatedTask.setProjectSequence(s);
         updatedTask.setSummary("summary7899999999");
-        given(projectTaskService.updateProjectByProjectSeq(any(ProjectTaskDTo.class),anyString(),anyString())).willThrow(ProjectIdException.class);
-
-//        then
-        mockMvc.perform(put("/api/v1/backlog/iden/seq-1")
-                .contentType(MediaType.APPLICATION_JSON)
-        .content(mapper.writeValueAsString(updatedTask)))
-                .andExpect(status().isBadRequest());
+        return updatedTask;
     }
 
+    private void extracted() {
+        ProjectTaskDTo projectTaskDTo = new ProjectTaskDTo();
+        ProjectTaskDTo updatedTask = new ProjectTaskDTo();
+        Project project = new Project();
+        BackLog backLog = new BackLog();
+        project.setId(ID1);
+        project.setBackLog(backLog);
+        project.setProjectIdentifier(PROJECT_IDENTIFIER);
+        project.setProjectName(PROJECT_NAME);
+        project.setDescription(DESCRIPTION);
+
+        backLog.setId(ID1);
+        backLog.setProject(project);
+        backLog.setProjectIdentifier(project.getProjectIdentifier());
+        backLog.getProjectTasks().add(projectMapper.projectTaskDTOToProjectTask(projectTaskDTo));
+        backLog.getProjectTasks().add(projectMapper.projectTaskDTOToProjectTask(updatedTask));
+
+        projectTaskDTo.setId(ID1);
+        projectTaskDTo.setProjectSequence(PROJECT_SEQUENCE);
+        projectTaskDTo.setProjectIdentifier(backLog.getProjectIdentifier());
+        projectTaskDTo.setBackLog(backLog);
+        projectTaskDTo.setSummary("summary999999");
+    }
+
+    private ProjectTaskDTo getProjectTaskDTo() {
+        ProjectTaskDTo projectTaskDTo = getTaskDTo();
+        projectTaskDTo.setSummary(SUMMARY);
+
+        ProjectTaskDTo updatedTask = new ProjectTaskDTo();
+        updatedTask.setId(projectTaskDTo.getId());
+        updatedTask.setBackLog(projectTaskDTo.getBackLog());
+        updatedTask.setProjectIdentifier(projectTaskDTo.getProjectIdentifier());
+        updatedTask.setProjectSequence(PROJECT_SEQUENCE);
+        updatedTask.setSummary(SUMMARY+1);
+        return updatedTask;
+    }
 }

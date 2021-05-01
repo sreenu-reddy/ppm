@@ -287,4 +287,46 @@ class ProjectTaskServiceTest {
         inOrder.verify(projectTaskRepository).findByProjectSequence(anyString());
         inOrder.verify(projectTaskRepository).save(any(ProjectTask.class));
     }
+
+    @Test
+    void deleteProjectTask(){
+//        Given
+        ProjectTask projectTask = new ProjectTask();
+        ProjectTask updatedTask = new ProjectTask();
+        BackLog backLog = new BackLog();
+        Project project = new Project();
+        project.setId(ID);
+        project.setProjectName(PROJECT_NAME);
+        project.setProjectIdentifier(PROJECT_IDENTIFIER);
+        project.setBackLog(backLog);
+
+        backLog.setId(ID);
+        backLog.setProject(project);
+        backLog.setProjectIdentifier(PROJECT_IDENTIFIER);
+
+        projectTask.setId(ID);
+        projectTask.setProjectIdentifier(PROJECT_IDENTIFIER);
+        projectTask.setSummary(SUMMARY);
+        projectTask.setBackLog(backLog);
+        backLog.getProjectTasks().add(projectTask);
+        projectTask.setProjectSequence(PROJECT_SEQUENCE);
+
+        updatedTask.setId(projectTask.getId());
+        updatedTask.setProjectIdentifier(projectTask.getProjectIdentifier());
+        updatedTask.setSummary(SUMMARY_1);
+        updatedTask.setBackLog(projectTask.getBackLog());
+        backLog.getProjectTasks().remove(projectTask);
+        backLog.getProjectTasks().add(updatedTask);
+        updatedTask.setProjectSequence(PROJECT_SEQUENCE);
+        given(backLogRepository.findByProjectIdentifier(PROJECT_IDENTIFIER)).willReturn(backLog);
+        given(projectTaskRepository.findByProjectSequence(anyString())).willReturn(projectTask);
+//        When
+
+        projectTaskService.deleteProjectSeq(PROJECT_IDENTIFIER,PROJECT_SEQUENCE);
+//        Then
+        InOrder inOrder = Mockito.inOrder(backLogRepository,projectTaskRepository,projectTaskRepository);
+        inOrder.verify(backLogRepository).findByProjectIdentifier(anyString());
+        inOrder.verify(projectTaskRepository).findByProjectSequence(anyString());
+        inOrder.verify(projectTaskRepository).delete(any(ProjectTask.class));
+    }
 }

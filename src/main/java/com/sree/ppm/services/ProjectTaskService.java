@@ -8,4 +8,5 @@ public interface ProjectTaskService {
     ProjectTaskListDTO getAllProjectTasks(String backLogId);
     ProjectTaskDTo getProjectTaskByProjectSeq(String backLogId,String ptSeq);
     ProjectTaskDTo updateProjectByProjectSeq(ProjectTaskDTo updatedProjectTaskDto,String backLogId, String ptSeq);
+    void deleteProjectSeq(String backLogId, String ptSeq);
 }
