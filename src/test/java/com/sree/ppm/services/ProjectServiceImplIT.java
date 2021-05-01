@@ -1,6 +1,6 @@
 package com.sree.ppm.services;
 
-import com.sree.ppm.BootStrapData;
+import com.sree.ppm.bootstrap.BootStrapData;
 import com.sree.ppm.api.v1.models.ProjectDTO;
 import com.sree.ppm.exceptions.ProjectIdException;
 import com.sree.ppm.repositories.BackLogRepository;

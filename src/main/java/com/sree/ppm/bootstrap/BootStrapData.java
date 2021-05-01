@@ -1,4 +1,4 @@
-package com.sree.ppm;
+package com.sree.ppm.bootstrap;
 
 import com.sree.ppm.domains.BackLog;
 import com.sree.ppm.domains.Project;

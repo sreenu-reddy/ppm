@@ -1,6 +1,6 @@
 package com.sree.ppm.services;
 
-import com.sree.ppm.BootStrapData;
+import com.sree.ppm.bootstrap.BootStrapData;
 
 import com.sree.ppm.api.v1.mapper.ProjectTaskMapper;
 import com.sree.ppm.api.v1.models.ProjectTaskDTo;
