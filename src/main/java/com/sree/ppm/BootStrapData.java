@@ -7,9 +7,11 @@ import com.sree.ppm.repositories.BackLogRepository;
 import com.sree.ppm.repositories.ProjectRepository;
 import com.sree.ppm.repositories.ProjectTaskRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
+@Profile("default")
 public class BootStrapData implements CommandLineRunner {
 
     private final ProjectRepository projectRepository;
