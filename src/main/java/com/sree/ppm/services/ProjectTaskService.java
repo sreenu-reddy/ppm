@@ -7,4 +7,5 @@ public interface ProjectTaskService {
     ProjectTaskDTo createProjectTask(String projectIdentifier,ProjectTaskDTo projectTaskDTo);
     ProjectTaskListDTO getAllProjectTasks(String backLogId);
     ProjectTaskDTo getProjectTaskByProjectSeq(String backLogId,String ptSeq);
+    ProjectTaskDTo updateProjectByProjectSeq(ProjectTaskDTo updatedProjectTaskDto,String backLogId, String ptSeq);
 }

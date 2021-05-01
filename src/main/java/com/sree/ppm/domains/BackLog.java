@@ -14,7 +14,8 @@ public class BackLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Integer PTSequence=0;
+    private Integer PtSequence =0;
+    @Column(updatable = false)
     private String projectIdentifier;
 
 //    One to one with project
@@ -23,7 +24,7 @@ public class BackLog {
     @JsonIgnore
     private Project project;
 //    one to many with projectTask
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "backLog",fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "backLog",fetch = FetchType.EAGER,orphanRemoval = true)
     private List<ProjectTask> projectTasks = new ArrayList<>();
 
 }

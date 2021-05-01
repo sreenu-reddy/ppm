@@ -13,6 +13,8 @@ class ProjectMapperTest {
 
     public static final long ID = 1L;
     public static final String PROJECT_NAME = "ProjectName";
+    public static final String PROJECT_IDENTIFIER = "iden";
+    public static final String DESCRIPTION = "desc";
     ProjectMapper projectMapper = ProjectMapper.INSTANCE;
 
     @Test
@@ -33,8 +35,8 @@ class ProjectMapperTest {
         project.setProjectName(PROJECT_NAME);
         project.setStartDate(new Date());
         project.setEndDate(new Date());
-        project.setProjectIdentifier("iden");
-        project.setDescription("desc");
+        project.setProjectIdentifier(PROJECT_IDENTIFIER);
+        project.setDescription(DESCRIPTION);
         project.setBackLog(new BackLog());
 
 
@@ -67,8 +69,8 @@ class ProjectMapperTest {
 //        Given
         ProjectDTO projectDTO = new ProjectDTO();
         projectDTO.setId(ID);
-        projectDTO.setProjectIdentifier("iden");
-        projectDTO.setDescription("desc");
+        projectDTO.setProjectIdentifier(PROJECT_IDENTIFIER);
+        projectDTO.setDescription(DESCRIPTION);
         projectDTO.setBackLog(new BackLog());
         projectDTO.setProjectName(PROJECT_NAME);
         projectDTO.setStartDate(new Date());

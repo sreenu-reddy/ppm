@@ -2,13 +2,16 @@ package com.sree.ppm.services;
 
 import com.sree.ppm.api.v1.models.ProjectListDTO;
 import com.sree.ppm.domains.BackLog;
+import com.sree.ppm.domains.Project;
 import com.sree.ppm.exceptions.ProjectIdException;
 import com.sree.ppm.api.v1.mapper.ProjectMapper;
 import com.sree.ppm.api.v1.models.ProjectDTO;
+import com.sree.ppm.exceptions.ProjectNotFoundException;
 import com.sree.ppm.repositories.BackLogRepository;
 import com.sree.ppm.repositories.ProjectRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -69,8 +72,19 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectDTO updateProject(Long id,ProjectDTO projectDTO) {
 
+        Optional<Project> project = projectRepository.findById(id);
+        if (project.isPresent()){
+            Project project1 = project.get();
+            if (!(project1.getProjectIdentifier().equalsIgnoreCase(projectDTO.getProjectIdentifier()))){
+                throw new ProjectIdException("Project Identifier is not updatable, Original: "+project1.getProjectIdentifier().toUpperCase()+" Updating: "+projectDTO.getProjectIdentifier().toUpperCase());
+            }
+        }else{
+            throw new ProjectNotFoundException("Project with the given ID: "+id+ " doesn't exist");
+        }
+
         var detachedProject = projectMapper.projectDTOToProject(projectDTO);
         detachedProject.setId(id);
+        detachedProject.setProjectIdentifier(detachedProject.getProjectIdentifier().toUpperCase());
         detachedProject.setBackLog(backLogRepository.findByProjectIdentifier(detachedProject.getProjectIdentifier().toUpperCase()));
         var savedProject = projectRepository.save(detachedProject);
 

@@ -6,6 +6,7 @@ import com.sree.ppm.domains.BackLog;
 import com.sree.ppm.exceptions.ProjectIdException;
 import com.sree.ppm.api.v1.models.ProjectDTO;
 import com.sree.ppm.domains.Project;
+import com.sree.ppm.exceptions.ProjectNotFoundException;
 import com.sree.ppm.repositories.BackLogRepository;
 import com.sree.ppm.repositories.ProjectRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -199,6 +201,12 @@ class ProjectServiceTest {
         projectDTO.setProjectName("Name");
         projectDTO.setProjectIdentifier("iden");
 
+        Project project = new Project();
+        project.setId(projectDTO.getId());
+        project.setProjectIdentifier(projectDTO.getProjectIdentifier());
+        project.setProjectName(projectDTO.getProjectName());
+        project.setDescription(projectDTO.getDescription());
+
         Project savedProject = new Project();
         savedProject.setProjectName(projectDTO.getProjectName());
         savedProject.setId(1L);
@@ -211,6 +219,7 @@ class ProjectServiceTest {
         backLog.setProject(savedProject);
         backLog.setProjectIdentifier(savedProject.getProjectIdentifier());
 
+        given(projectRepository.findById(anyLong())).willReturn(Optional.of(project));
         given(projectRepository.save(any(Project.class))).willReturn(savedProject);
         given(backLogRepository.findByProjectIdentifier(anyString())).willReturn(backLog);
 
@@ -228,6 +237,12 @@ class ProjectServiceTest {
         then(projectRepository).shouldHaveNoMoreInteractions();
         then(backLogRepository).should().findByProjectIdentifier(anyString());
         then(projectRepository).shouldHaveNoMoreInteractions();
+    }
+
+    @Test
+    void updateProjectThrowsProject(){
+//        then
+        assertThrows(ProjectNotFoundException.class,()->projectService.updateProject(1L,new ProjectDTO()));
     }
 
 }

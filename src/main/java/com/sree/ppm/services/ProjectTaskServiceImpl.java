@@ -3,6 +3,7 @@ package com.sree.ppm.services;
 import com.sree.ppm.api.v1.mapper.ProjectTaskMapper;
 import com.sree.ppm.api.v1.models.ProjectTaskDTo;
 import com.sree.ppm.api.v1.models.ProjectTaskListDTO;
+import com.sree.ppm.exceptions.ProjectIdException;
 import com.sree.ppm.exceptions.ProjectNotFoundException;
 import com.sree.ppm.repositories.BackLogRepository;
 import com.sree.ppm.repositories.ProjectRepository;
@@ -31,9 +32,9 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
             var detachedProject = projectTaskMapper.projectTaskDTOToProjectTask(projectTaskDTo);
             var backLog = backLogRepository.findByProjectIdentifier(projectIdentifier.toUpperCase());
             detachedProject.setBackLog(backLog);
-            Integer backLogSequence = backLog.getPTSequence();
+            Integer backLogSequence = backLog.getPtSequence();
             backLogSequence++;
-            backLog.setPTSequence(backLogSequence);
+            backLog.setPtSequence(backLogSequence);
             detachedProject.setProjectSequence(backLog.getProjectIdentifier()+"-"+backLogSequence);
             detachedProject.setProjectIdentifier(projectIdentifier.toUpperCase());
             if (detachedProject.getPriority()==null){
@@ -65,20 +66,20 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
 
     @Override
     public ProjectTaskDTo getProjectTaskByProjectSeq(String backLogId, String ptSeq) {
-        //make sure we are searching on an existing backlog
+        //we must sure that  we are searching on an existing backlog
         var backlog = backLogRepository.findByProjectIdentifier(backLogId);
         if(backlog==null){
             throw new ProjectNotFoundException("Project with ID: '"+backLogId.toUpperCase()+"' does not exist");
         }
 
-        //make sure that our task exists
+        //we must sure that our task exists
         var projectTask = projectTaskRepository.findByProjectSequence(ptSeq);
 
         if(projectTask == null){
             throw new ProjectNotFoundException("Project Task '"+ptSeq.toUpperCase()+"' not found");
         }
 
-        //make sure that the backlog/project id in the path corresponds to the right project
+        //we must sure that the backlog/project id in the path corresponds to the right project
         if(!(projectTask.getProjectIdentifier().equals(backLogId))){
             throw new ProjectNotFoundException("Project Task '"+ptSeq.toUpperCase()+"' does not exist in project: '"+backLogId.toUpperCase());
         }
@@ -87,4 +88,22 @@ public class ProjectTaskServiceImpl implements ProjectTaskService {
         return projectTaskMapper.projectTaskToProjectTaskDTO(projectTask);
     }
 
+    @Override
+    public ProjectTaskDTo updateProjectByProjectSeq(ProjectTaskDTo updatedProjectTaskDto, String backLogId, String ptSeq) {
+        var projectTaskDTo = this.getProjectTaskByProjectSeq(backLogId,ptSeq);
+        if (!(projectTaskDTo.getProjectIdentifier().equalsIgnoreCase(updatedProjectTaskDto.getProjectIdentifier()))){
+            throw new ProjectIdException("ProjectIdentifier shouldn't update Original: " +
+                    ""+projectTaskDTo.getProjectIdentifier().toUpperCase()+" Updating: "+updatedProjectTaskDto.getProjectIdentifier().toUpperCase());
+        }
+        if (!(projectTaskDTo.getProjectSequence().equalsIgnoreCase(updatedProjectTaskDto.getProjectSequence()))){
+            throw new ProjectIdException("ProjectSequence shouldn't update Original: "+projectTaskDTo.getProjectSequence().toUpperCase()+" Updating: "+
+                    updatedProjectTaskDto.getProjectSequence().toUpperCase());
+        }
+        projectTaskDTo = updatedProjectTaskDto;
+        var projectTask = projectTaskMapper.projectTaskDTOToProjectTask(projectTaskDTo);
+
+        var savedProjectTask =projectTaskRepository.save(projectTask);
+        return projectTaskMapper.projectTaskToProjectTaskDTO(savedProjectTask);
+
+    }
 }

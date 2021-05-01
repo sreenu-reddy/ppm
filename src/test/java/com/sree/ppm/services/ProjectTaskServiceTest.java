@@ -71,7 +71,7 @@ class ProjectTaskServiceTest {
         backLog.setId(ID);
         backLog.setProjectIdentifier(project.getProjectIdentifier());
         backLog.setProject(project);
-        backLog.setPTSequence(2);
+        backLog.setPtSequence(2);
         backLog.setProjectTasks(projectTasks);
 
         ProjectTask projectTask = new ProjectTask();
@@ -80,7 +80,7 @@ class ProjectTaskServiceTest {
         projectTask.setBackLog(backLog);
         projectTask.setSummary(SUMMARY);
         projectTasks.add(projectTask);
-        projectTask.setProjectSequence(project.getProjectIdentifier()+"-"+backLog.getPTSequence());
+        projectTask.setProjectSequence(project.getProjectIdentifier()+"-"+backLog.getPtSequence());
         projectTask.setPriority(PRIORITY);
         projectTask.setStatus(STATUS);
 
@@ -238,5 +238,53 @@ class ProjectTaskServiceTest {
 
 //        then
         assertThrows(ProjectNotFoundException.class,()->projectTaskService.getProjectTaskByProjectSeq(PROJECT_IDENTIFIER,PROJECT_SEQUENCE));
+    }
+
+
+    @Test
+    void UpdateProjectTask(){
+//        Given
+        ProjectTask projectTask = new ProjectTask();
+        ProjectTask updatedTask = new ProjectTask();
+        BackLog backLog = new BackLog();
+        Project project = new Project();
+        project.setId(ID);
+        project.setProjectName(PROJECT_NAME);
+        project.setProjectIdentifier(PROJECT_IDENTIFIER);
+       project.setBackLog(backLog);
+
+        backLog.setId(ID);
+        backLog.setProject(project);
+        backLog.setProjectIdentifier(PROJECT_IDENTIFIER);
+
+        projectTask.setId(ID);
+        projectTask.setProjectIdentifier(PROJECT_IDENTIFIER);
+        projectTask.setSummary(SUMMARY);
+        projectTask.setBackLog(backLog);
+        backLog.getProjectTasks().add(projectTask);
+        projectTask.setProjectSequence(PROJECT_SEQUENCE);
+
+        updatedTask.setId(projectTask.getId());
+        updatedTask.setProjectIdentifier(projectTask.getProjectIdentifier());
+        updatedTask.setSummary(SUMMARY_1);
+        updatedTask.setBackLog(projectTask.getBackLog());
+        backLog.getProjectTasks().remove(projectTask);
+        backLog.getProjectTasks().add(updatedTask);
+        updatedTask.setProjectSequence(PROJECT_SEQUENCE);
+        given(backLogRepository.findByProjectIdentifier(PROJECT_IDENTIFIER)).willReturn(backLog);
+        given(projectTaskRepository.findByProjectSequence(anyString())).willReturn(projectTask);
+        given(projectTaskRepository.save(any(ProjectTask.class))).willReturn(updatedTask);
+
+//        When
+      var projectTaskDTo=  projectTaskService.updateProjectByProjectSeq(mapper.projectTaskToProjectTaskDTO(updatedTask),PROJECT_IDENTIFIER,PROJECT_SEQUENCE);
+//      Then
+        assertNotNull(projectTaskDTo);
+        assertEquals(ID,projectTaskDTo.getId());
+        assertEquals(projectTask.getBackLog(),projectTaskDTo.getBackLog());
+        assertEquals(SUMMARY_1,projectTaskDTo.getSummary());
+        InOrder inOrder = Mockito.inOrder(backLogRepository,projectTaskRepository,projectTaskRepository);
+        inOrder.verify(backLogRepository).findByProjectIdentifier(anyString());
+        inOrder.verify(projectTaskRepository).findByProjectSequence(anyString());
+        inOrder.verify(projectTaskRepository).save(any(ProjectTask.class));
     }
 }

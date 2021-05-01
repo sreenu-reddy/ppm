@@ -5,8 +5,7 @@ import com.sree.ppm.BootStrapData;
 import com.sree.ppm.api.v1.mapper.ProjectTaskMapper;
 import com.sree.ppm.api.v1.models.ProjectTaskDTo;
 import com.sree.ppm.domains.BackLog;
-import com.sree.ppm.domains.Project;
-import com.sree.ppm.domains.ProjectTask;
+import com.sree.ppm.exceptions.ProjectIdException;
 import com.sree.ppm.exceptions.ProjectNotFoundException;
 import com.sree.ppm.repositories.BackLogRepository;
 import com.sree.ppm.repositories.ProjectRepository;
@@ -19,8 +18,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -97,4 +94,29 @@ class ProjectTaskServiceImplIT {
 
         assertThrows(ProjectNotFoundException.class,()->projectTaskService.getProjectTaskByProjectSeq("FIRST","SEE1-0"));
    }
+
+   @Test
+   void UpdateProjectTaskWillThrowsProjectIdExpWhenProjectIdentifierUpdate(){
+//        Given
+       ProjectTaskDTo projectTaskDTo = new ProjectTaskDTo();
+       projectTaskDTo.setProjectIdentifier("hello");
+
+//       Then
+       assertThrows(ProjectIdException.class,()->projectTaskService.updateProjectByProjectSeq(projectTaskDTo,"SEE1","SEE1-0"));
+
+   }
+
+   @Test
+   void UpdateProjectTaskWillThrowsProjectIdExpWhenProjectSequenceUpdate(){
+//        Given
+       ProjectTaskDTo projectTaskDTo = new ProjectTaskDTo();
+       projectTaskDTo.setProjectIdentifier("SEE1");
+       projectTaskDTo.setProjectSequence("SEE1-11");
+
+//       Then
+       assertThrows(ProjectIdException.class,()->projectTaskService.updateProjectByProjectSeq(projectTaskDTo,"SEE1","SEE1-0"));
+
+   }
+
+
 }

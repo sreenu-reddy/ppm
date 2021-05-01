@@ -49,4 +49,15 @@ public class BackLogController {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PutMapping("/{backLogID}/{ptSeq}")
+    public ResponseEntity<Object> updateProjectTask(@Valid @RequestBody ProjectTaskDTo updatedProjectTask,@PathVariable String backLogID,@PathVariable String ptSeq){
+        try{
+            return new ResponseEntity<>(projectTaskService.updateProjectByProjectSeq(updatedProjectTask,backLogID,ptSeq),HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
+
+
+    }
 }

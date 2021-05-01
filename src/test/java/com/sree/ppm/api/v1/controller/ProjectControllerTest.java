@@ -5,6 +5,7 @@ import com.sree.ppm.api.v1.models.ProjectDTO;
 import com.sree.ppm.api.v1.models.ProjectListDTO;
 import com.sree.ppm.domains.Project;
 import com.sree.ppm.exceptions.ProjectIdException;
+import com.sree.ppm.exceptions.ProjectNotFoundException;
 import com.sree.ppm.services.ProjectService;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.BeforeEach;
@@ -322,14 +323,25 @@ class ProjectControllerTest {
 
 //        Given
         ProjectDTO projectDTO = new ProjectDTO();
-        projectDTO.setDescription("des");
+        projectDTO.setDescription(DESCRIPTION);
         projectDTO.setId(ID);
+
 
 //        Then
         mockMvc.perform(put("/api/v1/projects/kkkk")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(projectDTO)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void updateProjectStatus400WhenProjectNotFound(){
+//        Given
+        given(projectService.updateProject(anyLong(),any(ProjectDTO.class))).willThrow(ProjectNotFoundException.class);
+//        when
+       var response= controller.updateProject(1L,new ProjectDTO());
+//       Then
+        assertEquals(HttpStatus.BAD_REQUEST,response.getStatusCode());
     }
 
 }

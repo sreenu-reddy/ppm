@@ -15,6 +15,9 @@ class ProjectTaskMapperTest {
     public static final String PROJECT_IDENTIFIER = "iden";
     public static final int PRIORITY = 2;
     public static final String SUMMARY = "task";
+    public static final String PROJECT_SEQUENCE = "seq-1";
+    public static final String STATUS = "to-do";
+    public static final String ACCEPTANCE_CRITERIA = "criteria";
     ProjectTaskMapper projectTaskMapper = ProjectTaskMapper.INSTANCE;
 
     @Test
@@ -36,9 +39,9 @@ class ProjectTaskMapperTest {
         projectTask.setPriority(PRIORITY);
         projectTask.setSummary(SUMMARY);
         projectTask.setBackLog(new BackLog());
-        projectTask.setProjectSequence("seq-1");
-        projectTask.setStatus("to-do");
-        projectTask.setAcceptanceCriteria("criteria");
+        projectTask.setProjectSequence(PROJECT_SEQUENCE);
+        projectTask.setStatus(STATUS);
+        projectTask.setAcceptanceCriteria(ACCEPTANCE_CRITERIA);
         projectTask.setDueDate(new Date());
 
 //        When
@@ -78,7 +81,7 @@ class ProjectTaskMapperTest {
         projectTaskDTo.setStatus("in-progress");
         projectTaskDTo.setProjectSequence("seq-2");
         projectTaskDTo.setBackLog(new BackLog());
-        projectTaskDTo.setAcceptanceCriteria("criteria");
+        projectTaskDTo.setAcceptanceCriteria(ACCEPTANCE_CRITERIA);
         projectTaskDTo.setDueDate(new Date());
 //        When
         ProjectTask projectTask = projectTaskMapper.projectTaskDTOToProjectTask(projectTaskDTo);

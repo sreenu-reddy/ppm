@@ -23,7 +23,7 @@ public class ProjectTask {
     @Column(updatable = false)
     private String projectIdentifier;
 //    many to one with backLog
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.REFRESH)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "backLogId",updatable = false,nullable = false)
     @JsonIgnore
     private BackLog backLog;

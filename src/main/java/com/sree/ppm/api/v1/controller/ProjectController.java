@@ -61,10 +61,15 @@ public class ProjectController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateProject(@PathVariable Long id, @RequestBody ProjectDTO projectDTO){
-        return new ResponseEntity<>(projectService.updateProject(id,projectDTO),HttpStatus.OK);
+        try{
+            return new ResponseEntity<>(projectService.updateProject(id,projectDTO),HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
+
     }
 
-
+// Exceptions Handling
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<Object> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
