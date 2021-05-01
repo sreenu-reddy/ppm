@@ -15,7 +15,7 @@ install: true
 cache:
   directories:
     - "$HOME/.m2"
-#    - "$HOME/.sonar/cache"
+    - "$HOME/.sonar/cache"
 script:
     - mvn clean install jacoco:report coveralls:report sonar:sonar  -Dsonar.projectKey=sreenu-reddy_ppm
 env:
