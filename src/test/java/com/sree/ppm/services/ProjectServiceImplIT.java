@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 class ProjectServiceImplIT {
 
+    public static final String PROJECT_IDENTIFIER = "Hello";
     ProjectService projectService;
 
     @Autowired
@@ -42,7 +43,7 @@ class ProjectServiceImplIT {
     void updateProjectWillThrowsProjectIDExp() {
 //        Given
         ProjectDTO projectDTO = new ProjectDTO();
-        projectDTO.setProjectIdentifier("Hello");
+        projectDTO.setProjectIdentifier(PROJECT_IDENTIFIER);
 //        Then
         assertThrows(ProjectIdException.class,()->projectService.updateProject(1L,projectDTO));
     }

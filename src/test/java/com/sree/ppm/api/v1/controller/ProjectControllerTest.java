@@ -339,7 +339,7 @@ class ProjectControllerTest {
 //        Given
         given(projectService.updateProject(anyLong(),any(ProjectDTO.class))).willThrow(ProjectNotFoundException.class);
 //        when
-       var response= controller.updateProject(1L,new ProjectDTO());
+       var response= controller.updateProject(ID,new ProjectDTO());
 //       Then
         assertEquals(HttpStatus.BAD_REQUEST,response.getStatusCode());
     }
