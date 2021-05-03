@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -43,6 +44,7 @@ class ProjectTaskServiceImplIT {
     }
 
     @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     void createProjectTask() {
         //        Given
         BackLog backLog = backLogRepository.findByProjectIdentifier("FIRST");
@@ -66,6 +68,7 @@ class ProjectTaskServiceImplIT {
     }
 
     @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     void createProjectTaskWithEmptyStatus() {
         //        Given
         BackLog backLog = backLogRepository.findByProjectIdentifier("FIRST");
@@ -90,12 +93,14 @@ class ProjectTaskServiceImplIT {
     }
 
     @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
    void getProjectTaskByProjectSeqWillThrowsExp(){
 
         assertThrows(ProjectNotFoundException.class,()->projectTaskService.getProjectTaskByProjectSeq("FIRST","SEE1-0"));
    }
 
    @Test
+   @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
    void UpdateProjectTaskWillThrowsProjectIdExpWhenProjectIdentifierUpdate(){
 //        Given
        ProjectTaskDTo projectTaskDTo = new ProjectTaskDTo();
@@ -107,6 +112,7 @@ class ProjectTaskServiceImplIT {
    }
 
    @Test
+   @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
    void UpdateProjectTaskWillThrowsProjectIdExpWhenProjectSequenceUpdate(){
 //        Given
        ProjectTaskDTo projectTaskDTo = new ProjectTaskDTo();
