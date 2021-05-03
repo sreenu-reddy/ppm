@@ -182,7 +182,7 @@
                     <excludes>
                         <exclude>**/domains/*.*</exclude>
                         <exclude>**/PpmApplication.*</exclude>
-                        <exclude>**/bootstrap.*</exclude>
+                        <exclude>**/bootstrap/*.*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
