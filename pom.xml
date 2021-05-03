@@ -31,7 +31,7 @@
             **/domains/*.*,
             **/PpmApplication.*,
             **/models/*.*,
-            **/exceptions/*.*
+            **/bootstrap/*.*,
         </sonar.coverage.exclusions>
         <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
     </properties>
@@ -182,6 +182,7 @@
                     <excludes>
                         <exclude>**/domains/*.*</exclude>
                         <exclude>**/PpmApplication.*</exclude>
+                        <exclude>**/bootstrap.*</exclude>
                     </excludes>
                 </configuration>
                 <executions>

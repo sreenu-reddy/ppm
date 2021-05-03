@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 @Profile({"dev", "prod"})
 public class MysqlBootStrap  implements CommandLineRunner {
 
+    public static final String STATUS = "to-do";
     private final ProjectRepository projectRepository;
     private final BackLogRepository backLogRepository;
     private final ProjectTaskRepository projectTaskRepository;
@@ -54,7 +55,7 @@ public class MysqlBootStrap  implements CommandLineRunner {
         projectTask.setBackLog(backLog);
         projectTask.setPriority(1);
         projectTask.setProjectSequence(project.getProjectIdentifier()+"-"+backLog.getPtSequence());
-        projectTask.setStatus("to-do");
+        projectTask.setStatus(STATUS);
         projectTask.setProjectIdentifier(backLog.getProjectIdentifier());
 
         projectTask1.setProjectIdentifier(backLog.getProjectIdentifier());
@@ -62,7 +63,7 @@ public class MysqlBootStrap  implements CommandLineRunner {
         projectTask1.setSummary("Second ProjectTask");
         projectTask1.setBackLog(backLog);
         projectTask1.setPriority(2);
-        projectTask1.setStatus("to-do");
+        projectTask1.setStatus(STATUS);
 
         projectRepository.save(project);
         backLogRepository.save(backLog);
@@ -91,7 +92,7 @@ public class MysqlBootStrap  implements CommandLineRunner {
         projectTask2.setBackLog(backLog1);
         projectTask2.setPriority(1);
         projectTask2.setProjectSequence(project1.getProjectIdentifier()+"-"+backLog1.getPtSequence());
-        projectTask2.setStatus("to-do");
+        projectTask2.setStatus(STATUS);
         projectTask2.setProjectIdentifier(backLog1.getProjectIdentifier());
 
         projectTask1.setProjectIdentifier(backLog1.getProjectIdentifier());
@@ -99,14 +100,14 @@ public class MysqlBootStrap  implements CommandLineRunner {
         projectTask1.setSummary("Ss ProjectTask");
         projectTask1.setBackLog(backLog1);
         projectTask1.setPriority(3);
-        projectTask1.setStatus("to-do");
+        projectTask1.setStatus(STATUS);
 
         projectTask3.setProjectIdentifier(backLog1.getProjectIdentifier());
         projectTask3.setProjectSequence(project1.getProjectIdentifier()+"-"+(backLog1.getPtSequence()+1));
         projectTask3.setSummary("SThird ProjectTask");
         projectTask3.setBackLog(backLog1);
         projectTask3.setPriority(3);
-        projectTask3.setStatus("to-do");
+        projectTask3.setStatus(STATUS);
         projectRepository.save(project1);
         backLogRepository.save(backLog1);
         projectTaskRepository.save(projectTask1);
