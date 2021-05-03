@@ -228,7 +228,7 @@
 
                 </dependencies>
                 <configuration>
-                    <verbose>true</verbose>
+<!--                    <verbose>true</verbose>-->
                     <targetClasses>
                         <param>com.sree.ppm.api.v1.controller.*</param>
                         <param>com.sree.ppm.api.v1.mapper.*</param>
