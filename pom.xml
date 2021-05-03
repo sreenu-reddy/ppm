@@ -235,7 +235,7 @@
                         <param>com.sree.ppm.services.*</param>
                     </targetClasses>
                     <excludedTestClasses>
-                        <param>**/*IT.java</param>
+                        <param>com.sree.ppm.**/*IT.java</param>
                     </excludedTestClasses>
                     <targetTests>
                         <param>com.sree.ppm.api.v1.*</param>
