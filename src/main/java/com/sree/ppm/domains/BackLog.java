@@ -14,7 +14,7 @@ public class BackLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Integer PtSequence =0;
+    private Integer ptSequence =0;
     @Column(updatable = false)
     private String projectIdentifier;
 

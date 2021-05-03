@@ -242,7 +242,8 @@ class ProjectServiceTest {
     @Test
     void updateProjectThrowsProject(){
 //        then
-        assertThrows(ProjectNotFoundException.class,()->projectService.updateProject(1L,new ProjectDTO()));
+        ProjectDTO projectDTO = new ProjectDTO();
+        assertThrows(ProjectNotFoundException.class,()->projectService.updateProject(1L,projectDTO));
     }
 
 }

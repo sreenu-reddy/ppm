@@ -36,10 +36,10 @@ public class MysqlBootStrap  implements CommandLineRunner {
     }
 
     private void loadFirstProject(){
-        Project project = new Project();
-        BackLog backLog = new BackLog();
-        ProjectTask projectTask = new ProjectTask();
-        ProjectTask projectTask1 = new ProjectTask();
+        var project = new Project();
+        var backLog = new BackLog();
+        var projectTask = new ProjectTask();
+        var projectTask1 = new ProjectTask();
         project.setProjectIdentifier("FIRST");
         project.setProjectName("First Project");
         project.setDescription("First Description");
@@ -71,11 +71,11 @@ public class MysqlBootStrap  implements CommandLineRunner {
     }
 
     private void secondProject(){
-        Project project1 = new Project();
-        BackLog backLog1 = new BackLog();
-        ProjectTask projectTask2 = new ProjectTask();
-        ProjectTask projectTask1 = new ProjectTask();
-        ProjectTask projectTask3 = new ProjectTask();
+        var project1 = new Project();
+        var backLog1 = new BackLog();
+        var projectTask2 = new ProjectTask();
+        var projectTask1 = new ProjectTask();
+        var projectTask3 = new ProjectTask();
         project1.setProjectIdentifier("SEND");
         project1.setProjectName("Second Project");
         project1.setDescription("Second Description");

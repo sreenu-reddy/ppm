@@ -74,7 +74,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         Optional<Project> project = projectRepository.findById(id);
         if (project.isPresent()){
-            Project project1 = project.get();
+            var project1 = project.get();
             if (!(project1.getProjectIdentifier().equalsIgnoreCase(projectDTO.getProjectIdentifier()))){
                 throw new ProjectIdException("Project Identifier is not updatable, Original: "+project1.getProjectIdentifier().toUpperCase()+" Updating: "+projectDTO.getProjectIdentifier().toUpperCase());
             }

@@ -228,14 +228,13 @@
 
                 </dependencies>
                 <configuration>
-<!--                    <verbose>true</verbose>-->
                     <targetClasses>
                         <param>com.sree.ppm.api.v1.controller.*</param>
                         <param>com.sree.ppm.api.v1.mapper.*</param>
                         <param>com.sree.ppm.services.*</param>
                     </targetClasses>
                     <excludedTestClasses>
-                        <param>com.sree.ppm.**/*IT.java</param>
+                        <param>com.sree.ppm.services.**/*IT.java</param>
                     </excludedTestClasses>
                     <targetTests>
                         <param>com.sree.ppm.api.v1.*</param>
