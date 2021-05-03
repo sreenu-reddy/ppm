@@ -195,12 +195,14 @@
                 </executions>
             </plugin>
             <!--            SonarCloud-->
+            <!-- https://mvnrepository.com/artifact/org.sonarsource.scanner.maven/sonar-maven-plugin -->
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
-                <version>3.7.0.1746</version>
+                <version>3.9.0.2155</version>
             </plugin>
-<!--  PIT Mutation-->
+
+            <!--  PIT Mutation-->
 
             <plugin>
                 <groupId>org.pitest</groupId>
@@ -217,11 +219,13 @@
                     </execution>
                 </executions>
                 <dependencies>
+                    <!-- https://mvnrepository.com/artifact/org.pitest/pitest-junit5-plugin -->
                     <dependency>
                         <groupId>org.pitest</groupId>
                         <artifactId>pitest-junit5-plugin</artifactId>
-                        <version>0.8</version>
+                        <version>0.12</version>
                     </dependency>
+
                 </dependencies>
                 <configuration>
                     <targetClasses>
