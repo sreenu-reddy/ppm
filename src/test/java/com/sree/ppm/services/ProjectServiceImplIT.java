@@ -129,4 +129,14 @@ class ProjectServiceImplIT {
 
     }
 
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    void deleteProject(){
+//        When
+        projectService.deleteProject("first");
+//        Then
+        assertThrows(ProjectIdException.class,()->projectService.getProjectByIdentifier("first"));
+
+    }
+
 }

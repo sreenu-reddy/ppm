@@ -93,11 +93,51 @@ class ProjectTaskServiceImplIT {
     }
 
     @Test
+    void getProjectTaskBYProjectSeq(){
+//        When
+       var response= projectTaskService.getProjectTaskByProjectSeq("SEE1","SEE1-0");
+//       Then
+       assertNotNull(response);
+       assertEquals("SEE1",response.getProjectIdentifier());
+       assertEquals("SEE1-0",response.getProjectSequence());
+       assertNull(response.getDueDate());
+       assertNull(response.getAcceptanceCriteria());
+       assertNull(response.getPriority());
+       assertNotNull(response.getBackLog().getId());
+    }
+
+    @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
    void getProjectTaskByProjectSeqWillThrowsExp(){
 
         assertThrows(ProjectNotFoundException.class,()->projectTaskService.getProjectTaskByProjectSeq("FIRST","SEE1-0"));
    }
+
+   @Test
+   @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+   void updateProjectTask(){
+//        Given
+
+      var response = projectTaskService.getProjectTaskByProjectSeq("SEE1","SEE1-0");
+
+       response.setSummary("Updated Summary");
+       response.setPriority(2);
+       response.setStatus("progress");
+       response.setAcceptanceCriteria("testsShouldPass");
+//       When
+       var response1 = projectTaskService.updateProjectByProjectSeq(response,"SEE1","SEE1-0");
+
+//       Then
+       assertNotNull(response1);
+       assertEquals(2,response1.getPriority());
+       assertEquals("progress",response1.getStatus());
+       assertNull(response1.getDueDate());
+       assertEquals("testsShouldPass",response1.getAcceptanceCriteria());
+       assertEquals("SEE1",response1.getProjectIdentifier());
+
+   }
+
+
 
    @Test
    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
@@ -122,6 +162,16 @@ class ProjectTaskServiceImplIT {
 //       Then
        assertThrows(ProjectIdException.class,()->projectTaskService.updateProjectByProjectSeq(projectTaskDTo,"SEE1","SEE1-0"));
 
+   }
+
+   @Test
+   @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+   void deleteProjectTask(){
+//        WHen
+        projectTaskService.deleteProjectSeq("SEE1","SEE1-0");
+
+//        Then
+       assertNull(projectTaskRepository.findByProjectSequence("SEE1-0"));
    }
 
 
