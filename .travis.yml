@@ -9,13 +9,13 @@ addons:
       secure: "pK9UiU74Dub7zjrkJpqPjNLFxA9KqtGw841gF1+2y9ATdRRvury843/EuyOw6QWIBPPDKiba9JYPmB8pNlidE1Pscx9w9TkySpi3EJBl4S6nYunbfb7lONnakonmrwurBSwfdCi8WN9vY+j4o+dsq7eaonLJZ8EwtO0Ir5xvpdfMYxs4Fi2MxtdIuMO2FRysBOstDIwrRyBgU9sjbWHOgl51fN9nu2e+ob+vUH/QlCfd9qqBF4Uta5YtY2yXwnwcwNPjWEJXtMpYpOYlTKStFjI4rllgrodaC8/GVmmQW5rsRqBHBl+3OqUwtA0foChB7rOR+kJSwr7DwdURHDXhz3Ole9qSOcSl6qvEwW6WoAlLuF5YftiM1To1BdVtZkqnevSGvTl16kpla+JweuVGfkBpHdmNrfU3dUNafyP403gKCguBQEQLiVQxvytl8R+sMpaxrDb4Y/vdNuQ04uoIoZVpxKUBIN70FATth4zSfl8R9Gw7NHHuq10XGv6D5HOrvF1N0CIwe+lNmFeDoFEA4rrfswj1ahchHPMX3gu1o8d28Y6xVTDnA5GTHl09jdcFycC7HRH0JDz9p5PYND50VQ4hi4+SQwRElPYtueFtCWAYJ8MAT0gbyT7kymMmEajTKlRbEOTY6RqYkVDRiDjd8YZuD1D2956weXdGMMqp4Kc="
 
 
-after_success:
-  - mvn clean test jacoco:report coveralls:report
+#after_success:
+#  - mvn clean test jacoco:report coveralls:report
 install: true
-#cache:
-#  directories:
-#    - "$HOME/.m2"
-#    - "$HOME/.sonar/cache"
+cache:
+  directories:
+    - "$HOME/.m2"
+    - "$HOME/.sonar/cache"
 script:
     - mvn clean install jacoco:report coveralls:report sonar:sonar  -Dsonar.projectKey=sreenu-reddy_ppm
 env:

@@ -61,11 +61,7 @@ class ProjectControllerTest {
     @Test
     void createNewProject() throws NoSuchMethodException {
 //        given
-        ProjectDTO project = new ProjectDTO();
-        project.setId(ID);
-        project.setProjectName(PROJECT_NAME);
-        project.setProjectIdentifier(PROJECT_IDENTIFIER);
-        project.setDescription(DESCRIPTION);
+        ProjectDTO project = getProjectDTO(PROJECT_IDENTIFIER);
         given(projectService.createNewProject(any(ProjectDTO.class))).willReturn(project);
 
 //        When
@@ -82,14 +78,12 @@ class ProjectControllerTest {
         then(projectService).shouldHaveNoMoreInteractions();
     }
 
+
+
     @Test
     void createNewProjectStatusIsOK() throws Exception {
         //        given
-        ProjectDTO project = new ProjectDTO();
-        project.setId(ID);
-        project.setProjectName(PROJECT_NAME);
-        project.setProjectIdentifier(PROJECT_IDENTIFIER1);
-        project.setDescription(DESCRIPTION);
+        ProjectDTO project = getProjectDTO(PROJECT_IDENTIFIER1);
         given(projectService.createNewProject(any(ProjectDTO.class))).willReturn(project);
 
 //        When
@@ -142,11 +136,7 @@ class ProjectControllerTest {
     @Test
     void getProjectByIdentifier(){
 //        Given
-        ProjectDTO projectDTO = new ProjectDTO();
-        projectDTO.setId(ID);
-        projectDTO.setProjectName(PROJECT_NAME);
-        projectDTO.setProjectIdentifier(PROJECT_IDENTIFIER);
-        projectDTO.setDescription(DESCRIPTION);
+        ProjectDTO projectDTO = getProjectDTO(PROJECT_IDENTIFIER);
         given(projectService.getProjectByIdentifier(any(String.class))).willReturn(projectDTO);
 
 
@@ -161,11 +151,7 @@ class ProjectControllerTest {
     @Test
     void getProjectByIdentifierStatusIsOk() throws Exception {
         //        Given
-        ProjectDTO projectDTO = new ProjectDTO();
-        projectDTO.setId(ID);
-        projectDTO.setProjectName(PROJECT_NAME);
-        projectDTO.setProjectIdentifier(PROJECT_IDENTIFIER1);
-        projectDTO.setDescription(DESCRIPTION);
+        ProjectDTO projectDTO = getProjectDTO(PROJECT_IDENTIFIER1);
         given(projectService.getProjectByIdentifier(any(String.class))).willReturn(projectDTO);
 
 //        Then
@@ -179,11 +165,6 @@ class ProjectControllerTest {
     @Test
     void getProjectByIdentifierStatusIs404() throws Exception {
         //        Given
-        ProjectDTO projectDTO = new ProjectDTO();
-        projectDTO.setId(ID);
-        projectDTO.setProjectName(PROJECT_NAME);
-        projectDTO.setProjectIdentifier(PROJECT_IDENTIFIER1);
-        projectDTO.setDescription(DESCRIPTION);
         given(projectService.getProjectByIdentifier(any(String.class))).willThrow(ProjectIdException.class);
 
 //        Then
@@ -342,6 +323,15 @@ class ProjectControllerTest {
        var response= controller.updateProject(ID,new ProjectDTO());
 //       Then
         assertEquals(HttpStatus.BAD_REQUEST,response.getStatusCode());
+    }
+
+    private ProjectDTO getProjectDTO(String projectIdentifier) {
+        ProjectDTO project = new ProjectDTO();
+        project.setId(ID);
+        project.setProjectName(PROJECT_NAME);
+        project.setProjectIdentifier(projectIdentifier);
+        project.setDescription(DESCRIPTION);
+        return project;
     }
 
 }

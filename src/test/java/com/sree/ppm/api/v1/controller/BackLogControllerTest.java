@@ -44,20 +44,16 @@ class BackLogControllerTest {
     public static final int PT_SEQUENCE = 0;
     public static final long ID2 = 2L;
     public static final String PROJECT_SEQUENCE = "seq-1";
-    @Mock
-    ProjectTaskService projectTaskService;
-
-    BackLogController backLogController;
-
 
     private final ProjectTaskMapper projectMapper = ProjectTaskMapper.INSTANCE;
     private final ObjectMapper mapper = new ObjectMapper();
-
+    private MockMvc mockMvc;
+    @Mock
+    ProjectTaskService projectTaskService;
     @Mock
     BindingResult result;
 
-    private MockMvc mockMvc;
-
+    BackLogController backLogController;
     @BeforeEach
     void setUp() {
         backLogController = new BackLogController(projectTaskService);
@@ -70,11 +66,7 @@ class BackLogControllerTest {
         BackLog backLog = new BackLog();
         Project project = new Project();
         List<ProjectTask> projectTasks = new ArrayList<>();
-        ProjectTaskDTo projectTaskDTo = new ProjectTaskDTo();
-        project.setId(ID);
-        project.setProjectName(PROJECT_NAME);
-        project.setDescription(DESCRIPTION);
-        project.setProjectIdentifier(PROJECT_IDENTIFIER);
+        ProjectTaskDTo projectTaskDTo = getProjectTaskDTo(project);
         project.setBackLog(backLog);
 
         backLog.setId(ID);
@@ -111,31 +103,7 @@ class BackLogControllerTest {
                 .andExpect(status().isCreated());
     }
 
-    private ProjectTaskDTo getdTo() {
-        BackLog backLog = new BackLog();
-        Project project = new Project();
-        List<ProjectTask> projectTasks = new ArrayList<>();
-        ProjectTaskDTo projectTaskDTo = new ProjectTaskDTo();
-        project.setId(ID);
-        project.setProjectName(PROJECT_NAME);
-        project.setDescription(DESCRIPTION);
-        project.setProjectIdentifier(PROJECT_IDENTIFIER);
 
-        backLog.setId(ID);
-        backLog.setProjectIdentifier(project.getProjectIdentifier());
-        backLog.setProject(project);
-        backLog.setProjectTasks(projectTasks);
-        backLog.setPtSequence(PT_SEQUENCE);
-
-        projectTasks.add(projectMapper.projectTaskDTOToProjectTask(projectTaskDTo));
-
-        projectTaskDTo.setId(ID1);
-        projectTaskDTo.setBackLog(backLog);
-        projectTaskDTo.setSummary(SUMMARY);
-        projectTaskDTo.setProjectSequence(backLog.getProjectIdentifier()+"-"+backLog.getPtSequence());
-        projectTaskDTo.setProjectIdentifier(project.getProjectIdentifier());
-        return projectTaskDTo;
-    }
 
     @Test
     void createProjectTaskStatus404() throws Exception {
@@ -143,11 +111,7 @@ class BackLogControllerTest {
         BackLog backLog = new BackLog();
         Project project = new Project();
         List<ProjectTask> projectTasks = new ArrayList<>();
-        ProjectTaskDTo projectTaskDTo = new ProjectTaskDTo();
-        project.setId(ID);
-        project.setProjectName(PROJECT_NAME);
-        project.setDescription(DESCRIPTION);
-        project.setProjectIdentifier(PROJECT_IDENTIFIER);
+        ProjectTaskDTo projectTaskDTo = getProjectTaskDTo(project);
         project.setBackLog(backLog);
 
         backLog.setId(ID);
@@ -173,22 +137,21 @@ class BackLogControllerTest {
 
     }
 
+    private ProjectTaskDTo getProjectTaskDTo(Project project) {
+        ProjectTaskDTo projectTaskDTo = new ProjectTaskDTo();
+        project.setId(ID);
+        project.setProjectName(PROJECT_NAME);
+        project.setDescription(DESCRIPTION);
+        project.setProjectIdentifier(PROJECT_IDENTIFIER);
+        return projectTaskDTo;
+    }
+
     @Test
     void getBackLogById(){
 //        Given
-        ProjectTaskDTo projectTaskDTo = new ProjectTaskDTo();
-        projectTaskDTo.setId(ID1);
+        ProjectTaskListDTO listDTO = getProjectTaskListDTO();
 
-        ProjectTaskDTo projectTaskDTo1 = new ProjectTaskDTo();
-        projectTaskDTo1.setId(ID2);
-
-        List<ProjectTaskDTo> projectTaskDTos = new ArrayList<>();
-        projectTaskDTos.add(projectTaskDTo);
-        projectTaskDTos.add(projectTaskDTo1);
-
-        ProjectTaskListDTO listDTO = new ProjectTaskListDTO(projectTaskDTos);
-
-          given(projectTaskService.getAllProjectTasks(anyString())).willReturn(listDTO);
+        given(projectTaskService.getAllProjectTasks(anyString())).willReturn(listDTO);
 //        When
          var result = backLogController.getBackLogById(PROJECT_IDENTIFIER);
 //        Then
@@ -196,21 +159,10 @@ class BackLogControllerTest {
         assertEquals(HttpStatus.OK,result.getStatusCode());
     }
 
-
     @Test
     void getBackLogStatusOk() throws Exception {
 //        Given
-        ProjectTaskDTo projectTaskDTo = new ProjectTaskDTo();
-        projectTaskDTo.setId(ID1);
-
-        ProjectTaskDTo projectTaskDTo1 = new ProjectTaskDTo();
-        projectTaskDTo1.setId(ID2);
-
-        List<ProjectTaskDTo> projectTaskDTos = new ArrayList<>();
-        projectTaskDTos.add(projectTaskDTo);
-        projectTaskDTos.add(projectTaskDTo1);
-
-        ProjectTaskListDTO listDTO = new ProjectTaskListDTO(projectTaskDTos);
+        ProjectTaskListDTO listDTO = getProjectTaskListDTO();
 
         given(projectTaskService.getAllProjectTasks(anyString())).willReturn(listDTO);
 
@@ -327,8 +279,6 @@ class BackLogControllerTest {
         assertEquals(HttpStatus.OK,response.getStatusCode());
     }
 
-
-
     @Test
     void updateProjectTaskStatusIsOk() throws Exception {
 //        Given
@@ -379,6 +329,21 @@ class BackLogControllerTest {
         mockMvc.perform(delete("/api/v1/backlog/iden/seq-1")
         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+
+    private ProjectTaskListDTO getProjectTaskListDTO() {
+        ProjectTaskDTo projectTaskDTo = new ProjectTaskDTo();
+        projectTaskDTo.setId(ID1);
+
+        ProjectTaskDTo projectTaskDTo1 = new ProjectTaskDTo();
+        projectTaskDTo1.setId(ID2);
+
+        List<ProjectTaskDTo> projectTaskDTos = new ArrayList<>();
+        projectTaskDTos.add(projectTaskDTo);
+        projectTaskDTos.add(projectTaskDTo1);
+
+        return new ProjectTaskListDTO(projectTaskDTos);
     }
 
     private ProjectTaskDTo getTaskDTo() {
@@ -467,5 +432,27 @@ class BackLogControllerTest {
         updatedTask.setProjectSequence(PROJECT_SEQUENCE);
         updatedTask.setSummary(SUMMARY+1);
         return updatedTask;
+    }
+
+    private ProjectTaskDTo getdTo() {
+        BackLog backLog = new BackLog();
+        Project project = new Project();
+        List<ProjectTask> projectTasks = new ArrayList<>();
+        ProjectTaskDTo projectTaskDTo = getProjectTaskDTo(project);
+
+        backLog.setId(ID);
+        backLog.setProjectIdentifier(project.getProjectIdentifier());
+        backLog.setProject(project);
+        backLog.setProjectTasks(projectTasks);
+        backLog.setPtSequence(PT_SEQUENCE);
+
+        projectTasks.add(projectMapper.projectTaskDTOToProjectTask(projectTaskDTo));
+
+        projectTaskDTo.setId(ID1);
+        projectTaskDTo.setBackLog(backLog);
+        projectTaskDTo.setSummary(SUMMARY);
+        projectTaskDTo.setProjectSequence(backLog.getProjectIdentifier()+"-"+backLog.getPtSequence());
+        projectTaskDTo.setProjectIdentifier(project.getProjectIdentifier());
+        return projectTaskDTo;
     }
 }

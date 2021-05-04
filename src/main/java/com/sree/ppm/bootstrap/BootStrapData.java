@@ -6,12 +6,14 @@ import com.sree.ppm.domains.ProjectTask;
 import com.sree.ppm.repositories.BackLogRepository;
 import com.sree.ppm.repositories.ProjectRepository;
 import com.sree.ppm.repositories.ProjectTaskRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
 @Profile("default")
+@Slf4j
 public class BootStrapData implements CommandLineRunner {
 
     private final ProjectRepository projectRepository;
@@ -26,6 +28,7 @@ public class BootStrapData implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        log.debug("Loading BootStrap Data in Default profile");
            loadProject();
     }
 
@@ -72,9 +75,6 @@ public class BootStrapData implements CommandLineRunner {
 
         backLog1.getProjectTasks().add(projectTask2);
 
-
-
-
         projectRepository.save(project);
         projectRepository.save(project1);
         backLogRepository.save(backLog);
@@ -82,8 +82,6 @@ public class BootStrapData implements CommandLineRunner {
         projectTaskRepository.save(projectTask);
         projectTaskRepository.save(projectTask1);
         projectTaskRepository.save(projectTask2);
-
-
-
+        System.out.println("projects loaded"+ projectRepository.count());
     }
 }

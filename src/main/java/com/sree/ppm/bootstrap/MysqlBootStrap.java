@@ -6,6 +6,7 @@ import com.sree.ppm.domains.ProjectTask;
 import com.sree.ppm.repositories.BackLogRepository;
 import com.sree.ppm.repositories.ProjectRepository;
 import com.sree.ppm.repositories.ProjectTaskRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Profile({"dev", "prod"})
+@Slf4j
 public class MysqlBootStrap  implements CommandLineRunner {
 
     public static final String STATUS = "to-do";
@@ -31,6 +33,7 @@ public class MysqlBootStrap  implements CommandLineRunner {
     @Override
     public void run(String... args)  {
         if (projectRepository.count()==0){
+            log.debug("Loading data in dev or prod");
             loadFirstProject();
             secondProject();
         }

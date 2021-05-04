@@ -18,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
-
 class ProjectServiceImplIT {
 
     public static final String PROJECT_IDENTIFIER = "Hello";
