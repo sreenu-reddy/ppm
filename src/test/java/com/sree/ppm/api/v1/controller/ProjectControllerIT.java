@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.*;
-import org.springframework.test.annotation.DirtiesContext;
+//import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Objects;
@@ -34,7 +34,6 @@ class ProjectControllerIT {
 
 
 @Test
-@DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
 void getAllProjects(){
 //        Given
     baseUrl = baseUrl.concat(":").concat(port+"/api/v1/projects");
@@ -49,7 +48,7 @@ void getAllProjects(){
 
 }
     @Test
-    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+//    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     void getProjectByIdentifier() {
 //        given
         baseUrl = baseUrl.concat(":").concat(port+"/api/v1/projects/{identifier}");
@@ -67,7 +66,7 @@ void getAllProjects(){
     }
 
     @Test
-    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+//    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     void createProject(){
 //        Given
         baseUrl = baseUrl.concat(":").concat(port+"/api/v1/projects/new");
@@ -90,7 +89,7 @@ void getAllProjects(){
     }
 
     @Test
-    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+//    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     void deleteProject(){
 
 //    Given
@@ -100,7 +99,7 @@ void getAllProjects(){
 }
 
    @Test
-   @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+//   @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
    void updateProject() throws JsonProcessingException {
 //    Given
        baseUrl = baseUrl.concat(":").concat(port+"/api/v1/projects/first");
