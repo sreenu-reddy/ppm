@@ -1,7 +1,5 @@
 package com.sree.ppm.api.v1.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sree.ppm.api.v1.models.ProjectDTO;
 import com.sree.ppm.api.v1.models.ProjectListDTO;
 import org.junit.jupiter.api.Test;
@@ -11,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.*;
-//import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Objects;
@@ -30,9 +27,6 @@ class ProjectControllerIT {
     @Autowired
     TestRestTemplate testRestTemplate;
 
-   private final HttpHeaders httpHeaders = new HttpHeaders();
-
-
 @Test
 void getAllProjects(){
 //        Given
@@ -48,7 +42,6 @@ void getAllProjects(){
 
 }
     @Test
-//    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     void getProjectByIdentifier() {
 //        given
         baseUrl = baseUrl.concat(":").concat(port+"/api/v1/projects/{identifier}");
@@ -66,7 +59,6 @@ void getAllProjects(){
     }
 
     @Test
-//    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     void createProject(){
 //        Given
         baseUrl = baseUrl.concat(":").concat(port+"/api/v1/projects/new");
@@ -89,33 +81,12 @@ void getAllProjects(){
     }
 
     @Test
-//    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     void deleteProject(){
 
 //    Given
         baseUrl = baseUrl.concat(":").concat(port+"/api/v1/projects/{projectId}");
 
        testRestTemplate.delete(baseUrl,"first");
-}
-
-   @Test
-//   @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
-   void updateProject() throws JsonProcessingException {
-//    Given
-       baseUrl = baseUrl.concat(":").concat(port+"/api/v1/projects/first");
-       ProjectDTO projectDTO = new ProjectDTO();
-       projectDTO.setDescription("des");
-       projectDTO.setProjectName("myFirstProject");
-       ObjectMapper mapper = new ObjectMapper();
-       String requestBody = mapper.writeValueAsString(projectDTO);
-       HttpEntity<String> httpEntity = new HttpEntity<>(requestBody, httpHeaders);
-       ResponseEntity<String> responseEntity = testRestTemplate.exchange(
-              baseUrl,
-               HttpMethod.PUT, httpEntity, String.class);
-
-//       When
-       assertNotNull(responseEntity.getBody());
-       assertEquals(200,responseEntity.getStatusCodeValue());
    }
 
 }
