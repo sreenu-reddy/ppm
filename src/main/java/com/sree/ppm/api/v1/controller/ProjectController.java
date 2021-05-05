@@ -34,6 +34,7 @@ public class ProjectController {
             bindingResult.getFieldErrors().forEach(fieldError -> errorsMap.put(fieldError.getField(), fieldError.getDefaultMessage()));
             return new ResponseEntity<>(errorsMap,HttpStatus.BAD_REQUEST);
         }
+        log.debug("Project is created with ID:"+project.getProjectIdentifier().toUpperCase());
         return new ResponseEntity<>(projectService.createNewProject(project), HttpStatus.CREATED);
     }
 

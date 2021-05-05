@@ -82,6 +82,5 @@ public class BootStrapData implements CommandLineRunner {
         projectTaskRepository.save(projectTask);
         projectTaskRepository.save(projectTask1);
         projectTaskRepository.save(projectTask2);
-        System.out.println("projects loaded"+ projectRepository.count());
     }
 }
