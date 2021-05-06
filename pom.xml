@@ -236,7 +236,6 @@
                     </targetClasses>
                     <excludedTestClasses>
                         <param>com.sree.ppm.services.**/*IT.java</param>
-                        <param>com.sree.ppm.api.v1.controller.ProjectControllerIT</param>
                     </excludedTestClasses>
                     <targetTests>
                         <param>com.sree.ppm.api.v1.*</param>
